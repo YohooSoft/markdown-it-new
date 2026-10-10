@@ -144,12 +144,10 @@ default_rules.iframe_inline = function (tokens: Token[], idx: number): string {
 }
 default_rules.task_checkbox = function (
   tokens: Token[],
-  idx: number,
-  options: Required<MarkdownItOptions>
+  idx: number
 ): string {
   const checked = tokens[idx].meta?.checked === true
-  const close = options.xhtmlOut ? ' />' : '>'
-  return `<input class="task-list-item-checkbox" type="checkbox"${checked ? ' checked' : ''} disabled${close}`
+  return checked ? '[x]' : '[ ]'
 }
 
 /**

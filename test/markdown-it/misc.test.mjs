@@ -533,8 +533,17 @@ describe('iframe embeds', function () {
     )
   })
 
-  it('keeps iframe support opt-in', function () {
+  it('enables restricted iframe support in the default preset', function () {
     const md = markdownit()
+
+    assert.strictEqual(
+      md.render('<iframe src="https://player.example/embed/1"></iframe>'),
+      '<iframe src="https://player.example/embed/1"></iframe>\n'
+    )
+  })
+
+  it('can disable iframe support', function () {
+    const md = markdownit({ iframe: false })
 
     assert.strictEqual(
       md.render('<iframe src="https://player.example/embed/1"></iframe>'),
@@ -559,9 +568,9 @@ describe('task lists', function () {
     assert.strictEqual(
       md.render('1. [ ] first\n2. [x] finished\n3. [X] also finished'),
       '<ol class="contains-task-list">\n' +
-        '<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled> first</li>\n' +
-        '<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" checked disabled> finished</li>\n' +
-        '<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" checked disabled> also finished</li>\n' +
+        '<li class="task-list-item">[ ] first</li>\n' +
+        '<li class="task-list-item">[x] finished</li>\n' +
+        '<li class="task-list-item">[x] also finished</li>\n' +
         '</ol>\n'
     )
   })
@@ -592,7 +601,7 @@ describe('task lists', function () {
     assert.strictEqual(
       enabled.render('1. [ ] first'),
       '<ol class="contains-task-list">\n' +
-        '<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled /> first</li>\n' +
+        '<li class="task-list-item">[ ] first</li>\n' +
         '</ol>\n'
     )
   })

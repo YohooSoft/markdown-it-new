@@ -59,7 +59,7 @@ export interface MarkdownItOptions {
    * Only absolute HTTPS sources and a small set of non-script attributes are
    * emitted.
    *
-   * @defaultValue `false`
+   * @defaultValue `true` (`false` for `'commonmark'` and `'zero'` presets)
    */
   iframe?: boolean
 

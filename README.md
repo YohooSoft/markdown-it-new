@@ -45,13 +45,17 @@ const result = md.render('# markdown-it rulezz!')
 
 #### HTTPS iframe embeds
 
-Restricted iframe embeds can be enabled without enabling arbitrary HTML. Only
-absolute `https:` sources and safe presentation attributes are emitted:
+Restricted iframe embeds are enabled by default without enabling arbitrary
+HTML. Only absolute `https:` sources and safe presentation attributes are
+emitted:
 
 ```js
-const md = new MarkdownIt({ iframe: true })
+const md = new MarkdownIt()
 const result = md.render('<iframe src="https://example.com/embed/1"></iframe>')
 ```
+
+Set `iframe: false` to keep iframe markup escaped as text. The strict
+`commonmark` and `zero` presets keep iframe support disabled.
 
 #### Ordered task lists
 
@@ -60,7 +64,9 @@ numbering:
 
 ```js
 const result = md.render('1. [ ] first\n2. [x] finished')
-// <ol class="contains-task-list">...
+// <ol class="contains-task-list">
+// <li class="task-list-item">[ ] first</li>
+// <li class="task-list-item">[x] finished</li>
 ```
 
 Set `taskLists: false` to keep task markers as ordinary text. The strict

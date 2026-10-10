@@ -7,7 +7,7 @@ const options: Required<MarkdownItOptions> = {
   html: false,
 
   // Enable restricted HTTPS iframe embeds
-  iframe: false,
+  iframe: true,
 
   // Enable GFM-style task list items
   taskLists: true,
