@@ -6,6 +6,12 @@ const options: Required<MarkdownItOptions> = {
   // Enable HTML tags in source
   html: true,
 
+  // Enable restricted HTTPS iframe embeds
+  iframe: false,
+
+  // Keep GFM-style task list items opt-in in strict CommonMark mode
+  taskLists: false,
+
   // Use '/' to close single tags (<br />)
   xhtmlOut: true,
 
@@ -51,6 +57,7 @@ export default {
         'block',
         'strip_references',
         'inline',
+        'task_lists',
         'text_join'
       ]
     },

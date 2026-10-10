@@ -514,6 +514,90 @@ describe('Ordered list info', function () {
   })
 })
 
+describe('iframe embeds', function () {
+  it('renders a restricted HTTPS iframe when enabled', function () {
+    const md = markdownit({ iframe: true })
+
+    assert.strictEqual(
+      md.render('<iframe src="https://player.example/embed/1?x=1&amp;y=2" scrolling="no" allowfullscreen="true" onload="alert(1)"></iframe>'),
+      '<iframe src="https://player.example/embed/1?x=1&amp;y=2" scrolling="no" allowfullscreen></iframe>\n'
+    )
+  })
+
+  it('renders an iframe inside a paragraph when enabled', function () {
+    const md = markdownit({ iframe: true })
+
+    assert.strictEqual(
+      md.render('Video: <iframe src="https://player.example/embed/1"></iframe>'),
+      '<p>Video: <iframe src="https://player.example/embed/1"></iframe></p>\n'
+    )
+  })
+
+  it('keeps iframe support opt-in', function () {
+    const md = markdownit()
+
+    assert.strictEqual(
+      md.render('<iframe src="https://player.example/embed/1"></iframe>'),
+      '<p>&lt;iframe src=&quot;https://player.example/embed/1&quot;&gt;&lt;/iframe&gt;</p>\n'
+    )
+  })
+
+  it('escapes iframe sources that are not HTTPS', function () {
+    const md = markdownit({ iframe: true })
+
+    assert.strictEqual(
+      md.render('Video: <iframe src="javascript:alert(1)"></iframe>'),
+      '<p>Video: &lt;iframe src=&quot;javascript:alert(1)&quot;&gt;&lt;/iframe&gt;</p>\n'
+    )
+  })
+})
+
+describe('task lists', function () {
+  it('renders ordered task items with their numbering', function () {
+    const md = markdownit()
+
+    assert.strictEqual(
+      md.render('1. [ ] first\n2. [x] finished\n3. [X] also finished'),
+      '<ol class="contains-task-list">\n' +
+        '<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled> first</li>\n' +
+        '<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" checked disabled> finished</li>\n' +
+        '<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" checked disabled> also finished</li>\n' +
+        '</ol>\n'
+    )
+  })
+
+  it('does not treat an ordinary paragraph as a task item', function () {
+    const md = markdownit()
+
+    assert.strictEqual(md.render('[ ] ordinary text'), '<p>[ ] ordinary text</p>\n')
+  })
+
+  it('can disable task list parsing', function () {
+    const md = markdownit({ taskLists: false })
+
+    assert.strictEqual(
+      md.render('1. [ ] first\n2. [x] finished'),
+      '<ol>\n<li>[ ] first</li>\n<li>[x] finished</li>\n</ol>\n'
+    )
+  })
+
+  it('keeps task lists opt-in for the strict commonmark preset', function () {
+    const strict = markdownit('commonmark')
+    const enabled = markdownit('commonmark', { taskLists: true })
+
+    assert.strictEqual(
+      strict.render('1. [ ] first'),
+      '<ol>\n<li>[ ] first</li>\n</ol>\n'
+    )
+    assert.strictEqual(
+      enabled.render('1. [ ] first'),
+      '<ol class="contains-task-list">\n' +
+        '<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled /> first</li>\n' +
+        '</ol>\n'
+    )
+  })
+})
+
 describe('Token attributes', function () {
   it('.attrJoin', function () {
     const md = markdownit()

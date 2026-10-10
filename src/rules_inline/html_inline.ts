@@ -1,5 +1,7 @@
 // Process html tags
 
+import { escapeHtml } from '../common/utils.ts'
+import matchIframe from '../common/iframe.ts'
 import { HTML_TAG_RE } from '../common/html_re.ts'
 import type StateInline from './state_inline.ts'
 
@@ -17,8 +19,6 @@ function isLetter (ch: number) {
 }
 
 export default function html_inline (state: StateInline, silent: boolean): boolean {
-  if (!state.md.options.html) { return false }
-
   // Check start
   const max = state.posMax
   const pos = state.pos
@@ -26,6 +26,20 @@ export default function html_inline (state: StateInline, silent: boolean): boole
       pos + 2 >= max) {
     return false
   }
+
+  if (state.md.options.iframe) {
+    const iframe = matchIframe(state.src.slice(pos))
+    if (iframe) {
+      if (!silent) {
+        const token = state.push('iframe_inline', '', 0)
+        token.content = iframe.html ?? escapeHtml(iframe.source)
+      }
+      state.pos += iframe.length
+      return true
+    }
+  }
+
+  if (!state.md.options.html) { return false }
 
   // Quick fail on second char
   const ch = state.src.charCodeAt(pos + 1)

@@ -136,6 +136,21 @@ default_rules.html_block = function (tokens: Token[], idx: number): string {
 default_rules.html_inline = function (tokens: Token[], idx: number): string {
   return tokens[idx].content
 }
+default_rules.iframe_block = function (tokens: Token[], idx: number): string {
+  return `${tokens[idx].content}\n`
+}
+default_rules.iframe_inline = function (tokens: Token[], idx: number): string {
+  return tokens[idx].content
+}
+default_rules.task_checkbox = function (
+  tokens: Token[],
+  idx: number,
+  options: Required<MarkdownItOptions>
+): string {
+  const checked = tokens[idx].meta?.checked === true
+  const close = options.xhtmlOut ? ' />' : '>'
+  return `<input class="task-list-item-checkbox" type="checkbox"${checked ? ' checked' : ''} disabled${close}`
+}
 
 /**
  * Generates HTML from parsed token stream. Each instance has independent

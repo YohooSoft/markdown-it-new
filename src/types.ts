@@ -55,6 +55,22 @@ export interface MarkdownItOptions {
   html?: boolean
 
   /**
+   * Enable restricted iframe embeds without enabling arbitrary HTML.
+   * Only absolute HTTPS sources and a small set of non-script attributes are
+   * emitted.
+   *
+   * @defaultValue `false`
+   */
+  iframe?: boolean
+
+  /**
+   * Enable GFM-style task list items such as `- [ ] todo` and `1. [x] done`.
+   *
+   * @defaultValue `true`
+   */
+  taskLists?: boolean
+
+  /**
    * Use '/' to close single tags (`<br />`).
    *
    * @defaultValue `false` (`true` for `'commonmark'` preset only)

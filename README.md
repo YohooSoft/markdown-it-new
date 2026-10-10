@@ -1,8 +1,10 @@
 # markdown-it
 
-[![CI](https://github.com/markdown-it/markdown-it/actions/workflows/ci.yml/badge.svg)](https://github.com/markdown-it/markdown-it/actions/workflows/ci.yml)
-[![NPM version](https://img.shields.io/npm/v/markdown-it.svg?style=flat)](https://www.npmjs.org/package/markdown-it)
-[![Coverage Status](https://coveralls.io/repos/markdown-it/markdown-it/badge.svg?branch=master&service=github)](https://coveralls.io/github/markdown-it/markdown-it?branch=master)
+> This package is based on the original [markdown-it](https://github.com/markdown-it/markdown-it) project and has been modified to add the features maintained in this repository.
+
+[![CI](https://github.com/YohooSoft/markdown-it-new/actions/workflows/ci.yml/badge.svg)](https://github.com/YohooSoft/markdown-it-new/actions/workflows/ci.yml)
+[![NPM version](https://img.shields.io/npm/v/%40mryan2005%2Fmarkdown-it-new.svg?style=flat)](https://www.npmjs.org/package/@mryan2005/markdown-it-new)
+[![Coverage Status](https://coveralls.io/repos/YohooSoft/markdown-it-new/badge.svg?branch=master&service=github)](https://coveralls.io/github/YohooSoft/markdown-it-new?branch=master)
 
 > Markdown parser done right. Fast and easy to extend.
 
@@ -40,5 +42,29 @@ import MarkdownIt from 'markdown-it'
 const md = new MarkdownIt()
 const result = md.render('# markdown-it rulezz!')
 ```
+
+#### HTTPS iframe embeds
+
+Restricted iframe embeds can be enabled without enabling arbitrary HTML. Only
+absolute `https:` sources and safe presentation attributes are emitted:
+
+```js
+const md = new MarkdownIt({ iframe: true })
+const result = md.render('<iframe src="https://example.com/embed/1"></iframe>')
+```
+
+#### Ordered task lists
+
+GFM-style task markers are enabled by default and keep the ordered-list
+numbering:
+
+```js
+const result = md.render('1. [ ] first\n2. [x] finished')
+// <ol class="contains-task-list">...
+```
+
+Set `taskLists: false` to keep task markers as ordinary text. The strict
+`commonmark` preset keeps this GFM extension disabled unless you pass
+`taskLists: true` explicitly.
 
 [More usage examples](docs/usage.md).

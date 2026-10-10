@@ -1,7 +1,9 @@
 // HTML block
 
+import { escapeHtml } from '../common/utils.ts'
 import block_names from '../common/html_blocks.ts'
 import { HTML_OPEN_CLOSE_TAG_RE } from '../common/html_re.ts'
+import matchIframe from '../common/iframe.ts'
 import type StateBlock from './state_block.ts'
 
 // An array of opening and corresponding closing sequences for html tags,
@@ -28,11 +30,25 @@ export default function html_block (state: StateBlock, startLine: number, endLin
   // if it's indented more than 3 spaces, it should be a code block
   if (state.sCount[startLine] - state.blkIndent >= 4) { return false }
 
-  if (!state.md.options.html) { return false }
-
   if (state.src.charCodeAt(pos) !== 0x3C/* < */) { return false }
 
   let lineText = state.src.slice(pos, max)
+
+  if (state.md.options.iframe) {
+    const iframe = matchIframe(lineText)
+    if (iframe && lineText.slice(iframe.length).trim() === '') {
+      if (silent) { return true }
+
+      state.line = startLine + 1
+
+      const token = state.push('iframe_block', '', 0)
+      token.map = [startLine, state.line]
+      token.content = iframe.html ?? escapeHtml(iframe.source)
+      return true
+    }
+  }
+
+  if (!state.md.options.html) { return false }
 
   let i = 0
   for (; i < HTML_SEQUENCES.length; i++) {

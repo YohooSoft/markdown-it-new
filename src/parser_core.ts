@@ -8,6 +8,7 @@ import r_inline from './rules_core/inline.ts'
 import r_linkify from './rules_core/linkify.ts'
 import r_replacements from './rules_core/replacements.ts'
 import r_smartquotes from './rules_core/smartquotes.ts'
+import r_task_lists from './rules_core/task_lists.ts'
 import r_text_join from './rules_core/text_join.ts'
 
 const _rules: Array<[
@@ -18,6 +19,7 @@ const _rules: Array<[
   ['block', r_block],
   ['strip_references', r_strip_references],
   ['inline', r_inline],
+  ['task_lists', r_task_lists],
   ['linkify', r_linkify],
   ['replacements', r_replacements],
   ['smartquotes', r_smartquotes],

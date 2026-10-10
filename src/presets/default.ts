@@ -6,6 +6,12 @@ const options: Required<MarkdownItOptions> = {
   // Enable HTML tags in source
   html: false,
 
+  // Enable restricted HTTPS iframe embeds
+  iframe: false,
+
+  // Enable GFM-style task list items
+  taskLists: true,
+
   // Use '/' to close single tags (<br />)
   xhtmlOut: false,
 

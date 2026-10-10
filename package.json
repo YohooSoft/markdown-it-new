@@ -1,5 +1,5 @@
 {
-  "name": "markdown-it",
+  "name": "@mryan2005/markdown-it-new",
   "version": "15.0.2",
   "description": "Markdown-it - modern pluggable markdown parser.",
   "keywords": [
@@ -9,7 +9,11 @@
     "markdown-it",
     "markdown-it-plugin"
   ],
-  "repository": "markdown-it/markdown-it",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YohooSoft/markdown-it-new.git"
+  },
+  "homepage": "https://github.com/YohooSoft/markdown-it-new#readme",
   "license": "MIT",
   "funding": [
     {
