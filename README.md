@@ -65,8 +65,8 @@ numbering:
 ```js
 const result = md.render('1. [ ] first\n2. [x] finished')
 // <ol class="contains-task-list">
-// <li class="task-list-item">[ ] first</li>
-// <li class="task-list-item">[x] finished</li>
+// <li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled> first</li>
+// <li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" checked disabled> finished</li>
 ```
 
 Set `taskLists: false` to keep task markers as ordinary text. The strict
