@@ -189,21 +189,6 @@ default_rules.table_controls_menu = function (tokens: Token[], idx: number): str
   const meta = tokens[idx].meta ?? {}
   const headers = Array.isArray(meta.headers) ? meta.headers.map(String) : []
   const rowCount = Number(meta.rowCount ?? 0)
-  const inputStyle = 'width:100%;min-width:0;padding:7px 9px;border:1px solid rgba(148,163,184,.38);' +
-    'border-radius:8px;background:#fff;color:#334155;font:inherit;box-sizing:border-box;'
-  const selectStyle = 'width:100%;padding:7px 9px;border:1px solid rgba(148,163,184,.38);' +
-    'border-radius:8px;background:#fff;color:#334155;font:inherit;cursor:pointer;box-sizing:border-box;'
-  const columns = headers.map((header, column) => {
-    const label = escapeHtml(header.trim() || `第 ${column + 1} 列`)
-    return '<div class="table-menu-column" style="display:grid;gap:6px;padding:9px;' +
-      'border:1px solid rgba(148,163,184,.24);border-radius:10px;background:rgba(255,255,255,.64)">' +
-      `<strong style="overflow:hidden;color:#334155;font-size:12px;font-weight:700;text-overflow:ellipsis;white-space:nowrap" title="${label}">${label}</strong>` +
-      `<input type="search" data-table-filter data-table-column="${column}" aria-label="筛选 ${label}" placeholder="筛选内容" style="${inputStyle}">` +
-      `<select data-table-sort data-table-column="${column}" aria-label="排序 ${label}" style="${selectStyle}">` +
-      '<option value="">不排序</option><option value="asc">升序</option><option value="desc">降序</option>' +
-      '</select></div>'
-  }).join('')
-
   const buttonStyle = 'padding:6px 10px;border:1px solid rgba(148,163,184,.38);' +
     'border-radius:8px;background:rgba(255,255,255,.72);color:#475569;' +
     'font:inherit;cursor:pointer;box-shadow:0 1px 2px rgba(15,23,42,.04);'
@@ -220,11 +205,25 @@ default_rules.table_controls_menu = function (tokens: Token[], idx: number): str
     `<span data-table-summary style="color:#64748b;font-size:12px">共 ${rowCount} 行 · ${headers.length} 列</span>` +
     '</div>' +
     '<div style="display:flex;align-items:center;gap:8px">' +
+    `<button type="button" data-table-mode-button="sort" aria-pressed="false" title="在列头显示排序控件" style="${buttonStyle}">排序</button>` +
+    `<button type="button" data-table-mode-button="filter" aria-pressed="false" title="在列头显示筛选控件" style="${buttonStyle}">筛选</button>` +
     `<button type="button" data-table-reset title="恢复原始顺序并清空筛选" style="${buttonStyle}">还原</button>` +
-    `<button type="button" data-table-settings aria-expanded="false" title="显示或隐藏列设置" style="${buttonStyle}">设置</button>` +
     '</div></div>' +
-    `<div data-table-controls-panel hidden style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px">${columns}</div>` +
     '</div>\n'
+}
+default_rules.table_column_controls = function (tokens: Token[], idx: number): string {
+  const meta = tokens[idx].meta ?? {}
+  const column = Number(meta.column ?? 0)
+  const header = escapeHtml(String(meta.header ?? '').trim() || `第 ${column + 1} 列`)
+  const inputStyle = 'width:100%;min-width:120px;padding:5px 7px;border:1px solid rgba(148,163,184,.38);' +
+    'border-radius:7px;background:rgba(255,255,255,.86);color:#334155;font:500 12px/1.3 system-ui,sans-serif;box-sizing:border-box;'
+  const selectStyle = 'width:100%;min-width:112px;padding:5px 7px;border:1px solid rgba(148,163,184,.38);' +
+    'border-radius:7px;background:rgba(255,255,255,.86);color:#334155;font:500 12px/1.3 system-ui,sans-serif;cursor:pointer;box-sizing:border-box;'
+
+  return '<div class="table-column-controls" style="display:grid;gap:5px;margin-top:7px">' +
+    `<div data-table-column-control-mode="filter" hidden><input type="search" data-table-filter data-table-column="${column}" aria-label="筛选 ${header}" placeholder="筛选内容" style="${inputStyle}"></div>` +
+    `<div data-table-column-control-mode="sort" hidden><select data-table-sort data-table-column="${column}" aria-label="排序 ${header}" style="${selectStyle}"><option value="">不排序</option><option value="asc">升序</option><option value="desc">降序</option></select></div>` +
+    '</div>'
 }
 
 /**

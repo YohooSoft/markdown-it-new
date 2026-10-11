@@ -80,9 +80,10 @@ sort menu.
 
 #### Interactive tables
 
-Tables receive a responsive topbar above the table by default. It includes a
-reset action and a settings panel; each column then has its own text filter and
-sort selector. Multiple column sorts are applied from left to right.
+Tables receive a responsive topbar above the table by default. It provides
+`排序`, `筛选`, and `还原` actions. Choosing `排序` or `筛选` reveals the
+corresponding control inside each column header. Multiple column sorts are
+applied from left to right.
 
 ```js
 const result = md.render('| Project | Status |\n| --- | --- |\n| A | Done |\n| B | Pending |')
