@@ -215,15 +215,19 @@ default_rules.table_column_controls = function (tokens: Token[], idx: number): s
   const meta = tokens[idx].meta ?? {}
   const column = Number(meta.column ?? 0)
   const header = escapeHtml(String(meta.header ?? '').trim() || `第 ${column + 1} 列`)
-  const inputStyle = 'width:100%;min-width:120px;padding:5px 7px;border:1px solid rgba(148,163,184,.38);' +
-    'border-radius:7px;background:rgba(255,255,255,.86);color:#334155;font:500 12px/1.3 system-ui,sans-serif;box-sizing:border-box;'
-  const selectStyle = 'width:100%;min-width:112px;padding:5px 7px;border:1px solid rgba(148,163,184,.38);' +
-    'border-radius:7px;background:rgba(255,255,255,.86);color:#334155;font:500 12px/1.3 system-ui,sans-serif;cursor:pointer;box-sizing:border-box;'
+  const iconButtonStyle = 'display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;' +
+    'padding:0;border:1px solid rgba(148,163,184,.34);border-radius:7px;' +
+    'background:rgba(255,255,255,.72);color:#64748b;cursor:pointer;vertical-align:middle;'
+  const sortIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4v16M5 7l3-3 3 3M16 20V4M13 17l3 3 3-3"/></svg>'
+  const filterIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16l-6.5 7.2V18l-3 1v-6.8L4 5z"/></svg>'
+  const inputStyle = 'width:150px;padding:7px 9px;border:1px solid rgba(148,163,184,.38);' +
+    'border-radius:8px;background:#fff;color:#334155;font:500 12px/1.3 system-ui,sans-serif;box-sizing:border-box;'
 
-  return '<div class="table-column-controls" style="display:grid;gap:5px;margin-top:7px">' +
-    `<div data-table-column-control-mode="filter" hidden><input type="search" data-table-filter data-table-column="${column}" aria-label="筛选 ${header}" placeholder="筛选内容" style="${inputStyle}"></div>` +
-    `<div data-table-column-control-mode="sort" hidden><select data-table-sort data-table-column="${column}" aria-label="排序 ${header}" style="${selectStyle}"><option value="">不排序</option><option value="asc">升序</option><option value="desc">降序</option></select></div>` +
-    '</div>'
+  return '<span class="table-column-controls" style="position:relative;display:inline-flex;align-items:center;gap:4px;margin-left:7px;vertical-align:middle">' +
+    `<button type="button" data-table-sort-button data-table-column="${column}" data-table-sort-direction="none" aria-label="排序 ${header}" title="排序 ${header}" hidden style="${iconButtonStyle}">${sortIcon}</button>` +
+    `<button type="button" data-table-filter-button data-table-column="${column}" aria-label="筛选 ${header}" title="筛选 ${header}" hidden style="${iconButtonStyle}">${filterIcon}</button>` +
+    `<span data-table-filter-popover hidden style="position:absolute;z-index:20;top:calc(100% + 5px);left:0;padding:6px;border:1px solid rgba(148,163,184,.32);border-radius:9px;background:rgba(255,255,255,.96);box-shadow:0 8px 24px rgba(15,23,42,.14)"><input type="search" data-table-filter data-table-column="${column}" aria-label="筛选 ${header}" placeholder="筛选内容" style="${inputStyle}"></span>` +
+    '</span>'
 }
 
 /**
