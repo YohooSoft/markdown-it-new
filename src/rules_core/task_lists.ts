@@ -30,8 +30,9 @@ function addClass (token: Pick<Token, 'attrGet' | 'attrJoin'>, className: string
 }
 
 /**
- * Converts `[ ]` / `[x]` markers at the start of list items into checkbox
- * tokens. The list parser itself remains responsible for ordered numbering.
+ * Converts `[ ]` / `[x]` markers at the start of list items and table cells
+ * into checkbox tokens. The list parser itself remains responsible for
+ * ordered numbering.
  */
 export default function task_lists (state: StateCore): void {
   if (!state.md.options.taskLists) { return }
@@ -40,6 +41,7 @@ export default function task_lists (state: StateCore): void {
   const lists: TaskList[] = []
   const listStack: TaskList[] = []
   const itemStack: OpenTaskListItem[] = []
+  const tableCellStack: number[] = []
 
   for (let i = 0; i < tokens.length; i++) {
     const token = tokens[i]
@@ -64,18 +66,30 @@ export default function task_lists (state: StateCore): void {
       continue
     }
 
-    if (token.type === 'inline' && itemStack.length > 0 && token.children) {
+    if (token.type === 'th_open' || token.type === 'td_open') {
+      tableCellStack.push(i)
+      continue
+    }
+
+    if (token.type === 'inline' && (itemStack.length > 0 || tableCellStack.length > 0) && token.children) {
       const marker = token.content.match(TASK_MARKER_RE)
       const firstTextIndex = token.children.findIndex(child => child.type === 'text')
       const firstText = firstTextIndex >= 0 ? token.children[firstTextIndex] : undefined
 
       if (marker && firstText && firstText.content.startsWith(marker[0])) {
-        const openItem = itemStack[itemStack.length - 1]
         const checked = marker[1].toLowerCase() === 'x'
         const remaining = firstText.content.slice(marker[0].length)
 
-        openItem.item.status = checked ? 'completed' : 'pending'
-        openItem.list.taskCount++
+        if (itemStack.length > 0) {
+          const openItem = itemStack[itemStack.length - 1]
+          openItem.item.status = checked ? 'completed' : 'pending'
+          openItem.list.taskCount++
+          addClass(tokens[openItem.item.tokenIndex], 'task-list-item')
+        } else {
+          const cell = tokens[tableCellStack[tableCellStack.length - 1]]
+          addClass(cell, 'task-cell')
+          cell.attrSet('data-task-status', checked ? 'completed' : 'pending')
+        }
 
         if (remaining) {
           firstText.content = remaining
@@ -93,8 +107,6 @@ export default function task_lists (state: StateCore): void {
 
         token.children.splice(firstTextIndex, 0, checkbox, spacer)
         token.content = token.content.slice(marker[0].length)
-
-        addClass(tokens[openItem.item.tokenIndex], 'task-list-item')
       }
     }
 
@@ -102,6 +114,8 @@ export default function task_lists (state: StateCore): void {
       itemStack.pop()
     } else if (token.type === 'ordered_list_close' || token.type === 'bullet_list_close') {
       listStack.pop()
+    } else if (token.type === 'th_close' || token.type === 'td_close') {
+      tableCellStack.pop()
     }
   }
 

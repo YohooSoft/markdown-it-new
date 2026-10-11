@@ -93,4 +93,13 @@ const result = md.render('| Project | Status |\n| --- | --- |\n| A | Done |\n| B
 Set `tableControls: false` to render ordinary tables without the filter and
 sort menu.
 
+Task markers at the start of table cells are rendered as disabled checkbox
+controls while keeping the cell text:
+
+```js
+const result = md.render('| Task | Status |\n| --- | --- |\n| [ ] Write docs | [x] Done |')
+// <td class="task-cell" data-task-status="pending">
+//   <input class="task-list-item-checkbox" type="checkbox" disabled> Write docs
+```
+
 [More usage examples](docs/usage.md).

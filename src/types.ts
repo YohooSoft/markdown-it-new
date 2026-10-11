@@ -64,7 +64,8 @@ export interface MarkdownItOptions {
   iframe?: boolean
 
   /**
-   * Enable GFM-style task list items such as `- [ ] todo` and `1. [x] done`.
+   * Enable GFM-style task markers such as `- [ ] todo`, `1. [x] done`, and
+   * `[ ]` / `[x]` at the start of table cells.
    *
    * @defaultValue `true`
    */
