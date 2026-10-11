@@ -12,6 +12,12 @@ const options: Required<MarkdownItOptions> = {
   // Keep GFM-style task list items opt-in in strict CommonMark mode
   taskLists: false,
 
+  // Keep task-list controls disabled in strict CommonMark mode
+  taskListControls: false,
+
+  // Keep table controls disabled in strict CommonMark mode
+  tableControls: false,
+
   // Use '/' to close single tags (<br />)
   xhtmlOut: true,
 

@@ -1,5 +1,7 @@
 import { callable } from './common/utils.ts'
 import MarkdownIt from './markdownit.ts'
+import './task_list_controls.ts'
+import './table_controls.ts'
 
 /**
  * Default package export.

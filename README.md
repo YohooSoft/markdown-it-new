@@ -60,17 +60,37 @@ Set `iframe: false` to keep iframe markup escaped as text. The strict
 #### Ordered task lists
 
 GFM-style task markers are enabled by default and keep the ordered-list
-numbering:
+numbering. A responsive menu above each task list can filter completed or
+pending items and sort them while retaining an original-order option:
 
 ```js
 const result = md.render('1. [ ] first\n2. [x] finished')
-// <ol class="contains-task-list">
-// <li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" disabled> first</li>
+// <div class="task-list-menu" data-task-list-menu>...</div>
+// <ol class="contains-task-list task-list-controlled" data-task-list="">
+// <li class="task-list-item" data-task-status="pending"><input ...> first</li>
 // <li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox" checked disabled> finished</li>
 ```
 
 Set `taskLists: false` to keep task markers as ordinary text. The strict
 `commonmark` preset keeps this GFM extension disabled unless you pass
 `taskLists: true` explicitly.
+
+Set `taskListControls: false` to render task checkboxes without the filter and
+sort menu.
+
+#### Interactive tables
+
+Tables receive a responsive topbar above the table by default. It includes a
+reset action and a settings panel; each column then has its own text filter and
+sort selector. Multiple column sorts are applied from left to right.
+
+```js
+const result = md.render('| Project | Status |\n| --- | --- |\n| A | Done |\n| B | Pending |')
+// <div class="table-controls-menu" data-table-controls-menu>...</div>
+// <table class="table-controlled" data-table-controlled="">...</table>
+```
+
+Set `tableControls: false` to render ordinary tables without the filter and
+sort menu.
 
 [More usage examples](docs/usage.md).

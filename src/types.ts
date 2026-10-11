@@ -71,6 +71,20 @@ export interface MarkdownItOptions {
   taskLists?: boolean
 
   /**
+   * Add an interactive filter and sort menu above task lists.
+   *
+   * @defaultValue `true` (`false` for `'commonmark'` and `'zero'` presets)
+   */
+  taskListControls?: boolean
+
+  /**
+   * Add a per-column filter and sort menu above rendered tables.
+   *
+   * @defaultValue `true` (`false` for `'commonmark'` and `'zero'` presets)
+   */
+  tableControls?: boolean
+
+  /**
    * Use '/' to close single tags (`<br />`).
    *
    * @defaultValue `false` (`true` for `'commonmark'` preset only)

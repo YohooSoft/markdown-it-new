@@ -13,6 +13,12 @@ const options: Required<MarkdownItOptions> = {
   // Enable GFM-style task list items
   taskLists: false,
 
+  // Keep task-list controls disabled in the zero preset
+  taskListControls: false,
+
+  // Keep table controls disabled in the zero preset
+  tableControls: false,
+
   // Use '/' to close single tags (<br />)
   xhtmlOut: false,
 

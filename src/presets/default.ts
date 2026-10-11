@@ -12,6 +12,12 @@ const options: Required<MarkdownItOptions> = {
   // Enable GFM-style task list items
   taskLists: true,
 
+  // Add filter and sort controls above task lists
+  taskListControls: true,
+
+  // Add per-column filter and sort controls above tables
+  tableControls: true,
+
   // Use '/' to close single tags (<br />)
   xhtmlOut: false,
 
