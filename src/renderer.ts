@@ -223,7 +223,7 @@ default_rules.table_column_controls = function (tokens: Token[], idx: number): s
   const inputStyle = 'width:150px;padding:7px 9px;border:1px solid rgba(148,163,184,.38);' +
     'border-radius:8px;background:#fff;color:#334155;font:500 12px/1.3 system-ui,sans-serif;box-sizing:border-box;'
 
-  return '<span class="table-column-controls" style="position:relative;display:inline-flex;align-items:center;gap:4px;margin-left:7px;vertical-align:middle">' +
+  return '<span class="table-column-controls" data-table-column-controls style="position:relative;display:inline-flex;align-items:center;gap:4px;margin-left:7px;vertical-align:middle">' +
     `<button type="button" data-table-sort-button data-table-column="${column}" data-table-sort-direction="none" aria-label="排序 ${header}" title="排序 ${header}" hidden style="${iconButtonStyle}">${sortIcon}</button>` +
     `<button type="button" data-table-filter-button data-table-column="${column}" aria-label="筛选 ${header}" title="筛选 ${header}" hidden style="${iconButtonStyle}">${filterIcon}</button>` +
     `<span data-table-filter-popover hidden style="position:absolute;z-index:20;top:calc(100% + 5px);left:0;padding:6px;border:1px solid rgba(148,163,184,.32);border-radius:9px;background:rgba(255,255,255,.96);box-shadow:0 8px 24px rgba(15,23,42,.14)"><input type="search" data-table-filter data-table-column="${column}" aria-label="筛选 ${header}" placeholder="筛选内容" style="${inputStyle}"></span>` +

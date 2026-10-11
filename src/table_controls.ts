@@ -163,10 +163,15 @@ function cycleSortButton (button: HTMLElement): void {
 }
 
 function handleTableControlEvent (event: Event): void {
-  const target = event.target
-  if (!(target instanceof Element)) {
+  const eventTarget = event.target
+  if (!(eventTarget instanceof Element)) {
     return
   }
+
+  const target = eventTarget.closest<HTMLElement>(
+    '[data-table-reset], [data-table-mode-button], [data-table-sort-button], [data-table-filter-button], [data-table-filter]'
+  )
+  if (!target) { return }
 
   const menu = target.closest<HTMLElement>('[data-table-controls-menu]')
   const table = target.closest<HTMLTableElement>('table[data-table-controlled]')
