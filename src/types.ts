@@ -86,6 +86,13 @@ export interface MarkdownItOptions {
   tableControls?: boolean
 
   /**
+   * Add a toolbar and settings menu above fenced code blocks.
+   *
+   * @defaultValue `true` (`false` for `'commonmark'` and `'zero'` presets)
+   */
+  codeControls?: boolean
+
+  /**
    * Use '/' to close single tags (`<br />`).
    *
    * @defaultValue `false` (`true` for `'commonmark'` preset only)

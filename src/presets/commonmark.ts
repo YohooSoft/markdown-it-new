@@ -18,6 +18,9 @@ const options: Required<MarkdownItOptions> = {
   // Keep table controls disabled in strict CommonMark mode
   tableControls: false,
 
+  // Keep code controls disabled in strict CommonMark mode
+  codeControls: false,
+
   // Use '/' to close single tags (<br />)
   xhtmlOut: true,
 

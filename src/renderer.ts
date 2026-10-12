@@ -37,6 +37,68 @@ default_rules.code_block = function (
   return `<pre${slf.renderAttrs(token)}><code>${escapeHtml(tokens[idx].content)}</code></pre>\n`
 }
 
+function codeLanguageLabel (language: string): string {
+  const short = language.split('.').pop()?.toLowerCase() ?? ''
+  const labels: Record<string, string> = {
+    bash: 'Shell',
+    css: 'CSS',
+    html: 'HTML',
+    java: 'Java',
+    js: 'JavaScript',
+    json: 'JSON',
+    md: 'Markdown',
+    py: 'Python',
+    python: 'Python',
+    sh: 'Shell',
+    sql: 'SQL',
+    ts: 'TypeScript',
+    tsx: 'TSX',
+    txt: '纯文本',
+    xml: 'XML',
+    yaml: 'YAML',
+    yml: 'YAML'
+  }
+  return labels[short] ?? (language || '纯文本')
+}
+
+function renderCodeBlock (token: Token, highlighted: string, language: string): string {
+  const label = escapeHtml(codeLanguageLabel(language))
+  const firstLine = escapeHtml((token.content.split(/\r?\n/)[0] || '').slice(0, 96))
+  const codeClass = language ? ' class="' + escapeHtml('language-' + language) + '"' : ''
+  const lines = highlighted.replace(/\r\n/g, '\n').split('\n')
+  const codeHtml = lines.map((line, index) => (
+    '<span class="code-line" data-code-line style="display:block">' +
+    '<span data-code-line-number hidden style="display:inline-block;min-width:2.4em;margin-right:1em;color:#94a3b8;text-align:right;user-select:none">' +
+    String(index + 1) +
+    '</span><span data-code-line-content>' + (line || ' ') + '</span></span>'
+  )).join('\n')
+  const codeIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 9-3 3 3 3M16 9l3 3-3 3M14 5l-4 14"/></svg>'
+  const copyIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg>'
+  const buttonStyle = 'display:inline-flex;align-items:center;gap:5px;padding:7px 10px;border:1px solid rgba(148,163,184,.35);border-radius:8px;background:rgba(255,255,255,.78);color:#334155;font:500 13px/1.3 system-ui,sans-serif;cursor:pointer;'
+
+  return '<div class="code-block" data-code-block data-code-language="' + escapeHtml(language) + '" style="margin:12px 0;border:1px solid #cbd5e1;border-radius:12px;overflow:visible;background:#fff;box-shadow:0 4px 16px rgba(15,23,42,.06)">' +
+    '<div data-code-toolbar style="display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:54px;padding:10px 14px;background:#f8fafc;border-bottom:1px solid #cbd5e1;font:500 14px/1.3 system-ui,sans-serif">' +
+    '<div style="display:flex;align-items:center;gap:9px;color:#2563eb">' + codeIcon + '<strong>' + label + '</strong></div>' +
+    '<div style="display:flex;align-items:center;gap:7px;min-width:0">' +
+    '<button type="button" data-code-mode-toggle style="' + buttonStyle + '">Embed <span aria-hidden="true">⌄</span></button>' +
+    '<code data-code-preview title="代码预览" style="display:block;max-width:260px;overflow:hidden;color:#334155;text-overflow:ellipsis;white-space:nowrap">' + firstLine + '</code>' +
+    '<button type="button" data-code-copy aria-label="复制代码" title="复制代码" style="' + buttonStyle + '">' + copyIcon + '</button>' +
+    '<button type="button" data-code-settings aria-expanded="false" style="' + buttonStyle + '">设置</button>' +
+    '</div></div>' +
+    '<div data-code-mode-menu hidden style="position:relative;z-index:5;margin:0 10px;padding:12px;border:1px solid #cbd5e1;border-radius:0 0 10px 10px;background:#fff;box-shadow:0 8px 22px rgba(15,23,42,.12);font:500 14px/1.4 system-ui,sans-serif">' +
+    '<strong style="display:block;margin-bottom:10px;color:#1f2937;font-size:16px">Select an option</strong>' +
+    '<button type="button" data-code-mode="embed" aria-selected="true" style="display:grid;width:100%;gap:3px;padding:8px;border:0;border-radius:8px;background:#f8fafc;color:#1f2937;text-align:left;cursor:pointer">' +
+    '<span style="font-size:15px">✓ &nbsp;Embed</span><span style="padding-left:24px;color:#64748b">Embed this code in your website.</span></button>' +
+    '<button type="button" data-code-mode="raw" aria-selected="false" style="display:grid;width:100%;gap:3px;padding:8px;border:0;border-radius:8px;background:transparent;color:#1f2937;text-align:left;cursor:pointer">' +
+    '<span style="font-size:15px">&nbsp;&nbsp;&nbsp;Raw</span><span style="padding-left:24px;color:#64748b">Show the raw code content.</span></button></div>' +
+    '<div data-code-settings-menu hidden style="position:relative;z-index:4;display:grid;gap:9px;margin:0 10px;padding:12px;border:1px solid #cbd5e1;border-radius:0 0 10px 10px;background:#fff;box-shadow:0 8px 22px rgba(15,23,42,.12);font:500 13px/1.4 system-ui,sans-serif;color:#334155">' +
+    '<label style="display:flex;align-items:center;justify-content:space-between;gap:14px">代码风格<select data-code-style style="min-width:110px;padding:5px 8px;border:1px solid #cbd5e1;border-radius:7px;background:#fff;color:#334155"><option value="light">浅色</option><option value="dark">深色</option></select></label>' +
+    '<label style="display:flex;align-items:center;gap:7px"><input type="checkbox" data-code-wrap style="accent-color:#2563eb">自动换行</label>' +
+    '<label style="display:flex;align-items:center;gap:7px"><input type="checkbox" data-code-line-numbers style="accent-color:#2563eb">行序号</label></div>' +
+    '<pre data-code-pre style="margin:0;padding:16px;overflow:auto;background:#fff;color:#1f2937"><code data-code-code' + codeClass + ' style="display:block;white-space:pre;font:500 14px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace">' + codeHtml + '</code></pre>' +
+    '</div>\n'
+}
+
 default_rules.fence = function (
   tokens: Token[],
   idx: number,
@@ -64,6 +126,10 @@ default_rules.fence = function (
 
   if (highlighted.indexOf('<pre') === 0) {
     return highlighted + '\n'
+  }
+
+  if (options.codeControls) {
+    return renderCodeBlock(token, highlighted, langName)
   }
 
   // If language exists, inject class gently, without modifying original token.
@@ -220,13 +286,23 @@ default_rules.table_column_controls = function (tokens: Token[], idx: number): s
     'background:rgba(255,255,255,.72);color:#64748b;cursor:pointer;vertical-align:middle;'
   const sortIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4v16M5 7l3-3 3 3M16 20V4M13 17l3 3 3-3"/></svg>'
   const filterIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16l-6.5 7.2V18l-3 1v-6.8L4 5z"/></svg>'
-  const inputStyle = 'width:150px;padding:7px 9px;border:1px solid rgba(148,163,184,.38);' +
-    'border-radius:8px;background:#fff;color:#334155;font:500 12px/1.3 system-ui,sans-serif;box-sizing:border-box;'
+  const actionStyle = 'border:0;background:transparent;padding:2px 0;color:#334155;' +
+    'font:500 13px/1.4 system-ui,sans-serif;cursor:pointer;white-space:nowrap;'
+  const filterCheckboxStyle = 'width:17px;height:17px;margin:0;accent-color:#39b58d;cursor:pointer;'
 
   return '<span class="table-column-controls" data-table-column-controls style="position:relative;display:inline-flex;align-items:center;gap:4px;margin-left:7px;vertical-align:middle">' +
     `<button type="button" data-table-sort-button data-table-column="${column}" data-table-sort-direction="none" aria-label="排序 ${header}" title="排序 ${header}" hidden style="${iconButtonStyle}">${sortIcon}</button>` +
     `<button type="button" data-table-filter-button data-table-column="${column}" aria-label="筛选 ${header}" title="筛选 ${header}" hidden style="${iconButtonStyle}">${filterIcon}</button>` +
-    `<span data-table-filter-popover hidden style="position:absolute;z-index:20;top:calc(100% + 5px);left:0;padding:6px;border:1px solid rgba(148,163,184,.32);border-radius:9px;background:rgba(255,255,255,.96);box-shadow:0 8px 24px rgba(15,23,42,.14)"><input type="search" data-table-filter data-table-column="${column}" aria-label="筛选 ${header}" placeholder="筛选内容" style="${inputStyle}"></span>` +
+    `<span data-table-filter-popover hidden style="position:absolute;z-index:20;top:calc(100% + 5px);left:0;min-width:240px;max-width:320px;padding:10px;border:1px solid rgba(148,163,184,.32);border-radius:10px;background:rgba(255,255,255,.97);box-shadow:0 8px 24px rgba(15,23,42,.14);color:#334155;text-align:left">` +
+    '<div style="display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1px solid rgba(148,163,184,.22);white-space:nowrap">' +
+    `<label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" data-table-select-all checked style="${filterCheckboxStyle}"><span>全选</span><span data-table-filter-count style="color:#64748b">（0）</span></label>` +
+    `<button type="button" data-table-filter-invert style="${actionStyle}">反选</button>` +
+    `<button type="button" data-table-filter-duplicates style="${actionStyle}">重复项</button>` +
+    `<button type="button" data-table-filter-top style="${actionStyle}">前十项</button>` +
+    `<button type="button" data-table-filter-more hidden style="${actionStyle}">更多</button>` +
+    '</div>' +
+    '<div data-table-filter-values style="display:grid;gap:5px;max-height:260px;overflow:auto;padding-top:8px"></div>' +
+    '</span>' +
     '</span>'
 }
 

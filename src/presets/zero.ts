@@ -19,6 +19,9 @@ const options: Required<MarkdownItOptions> = {
   // Keep table controls disabled in the zero preset
   tableControls: false,
 
+  // Keep code controls disabled in the zero preset
+  codeControls: false,
+
   // Use '/' to close single tags (<br />)
   xhtmlOut: false,
 

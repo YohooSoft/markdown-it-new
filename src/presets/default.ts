@@ -18,6 +18,9 @@ const options: Required<MarkdownItOptions> = {
   // Add per-column filter and sort controls above tables
   tableControls: true,
 
+  // Add toolbar and settings controls above fenced code blocks
+  codeControls: true,
+
   // Use '/' to close single tags (<br />)
   xhtmlOut: false,
 
