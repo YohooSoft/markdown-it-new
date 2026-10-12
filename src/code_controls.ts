@@ -16,16 +16,23 @@ function closeCodeMenus (block: HTMLElement, except?: HTMLElement): void {
   })
 }
 
-function applyCodeTheme (block: HTMLElement, theme: string): void {
+function applyCodeTheme (block: HTMLElement, theme: string, background: string): void {
   const pre = block.querySelector<HTMLElement>('[data-code-pre]')
   const numbers = block.querySelectorAll<HTMLElement>('[data-code-line-number]')
   if (!pre) { return }
 
-  const dark = theme === 'dark'
-  pre.style.background = dark ? '#0f172a' : '#fff'
-  pre.style.color = dark ? '#e2e8f0' : '#1f2937'
+  const themes: Record<string, { color: string, number: string }> = {
+    github: { color: '#24292f', number: '#6e7781' },
+    'github-dark': { color: '#c9d1d9', number: '#8b949e' },
+    monokai: { color: '#f8f8f2', number: '#75715e' },
+    dracula: { color: '#f8f8f2', number: '#6272a4' },
+    'solarized-light': { color: '#657b83', number: '#93a1a1' }
+  }
+  const selected = themes[theme] ?? themes.github
+  pre.style.background = background === 'dark' ? '#0f172a' : '#ffffff'
+  pre.style.color = selected.color
   numbers.forEach(number => {
-    number.style.color = dark ? '#64748b' : '#94a3b8'
+    number.style.color = selected.number
   })
 }
 
@@ -44,12 +51,14 @@ function applyCodeLineNumbers (block: HTMLElement, enabled: boolean): void {
 
 function resetCodeSettings (block: HTMLElement): void {
   const style = block.querySelector<HTMLSelectElement>('[data-code-style]')
+  const background = block.querySelector<HTMLSelectElement>('[data-code-background]')
   const wrap = block.querySelector<HTMLInputElement>('[data-code-wrap]')
   const numbers = block.querySelector<HTMLInputElement>('[data-code-line-numbers]')
-  if (style) { style.value = 'light' }
+  if (style) { style.value = 'github' }
+  if (background) { background.value = 'light' }
   if (wrap) { wrap.checked = false }
   if (numbers) { numbers.checked = false }
-  applyCodeTheme(block, 'light')
+  applyCodeTheme(block, 'github', 'light')
   applyCodeWrap(block, false)
   applyCodeLineNumbers(block, false)
 }
@@ -57,7 +66,7 @@ function resetCodeSettings (block: HTMLElement): void {
 function handleCodeControlEvent (event: Event): void {
   const eventTarget = event.target
   if (!(eventTarget instanceof Element)) { return }
-  const target = eventTarget.closest<HTMLElement>('[data-code-mode-toggle], [data-code-mode], [data-code-copy], [data-code-settings], [data-code-style], [data-code-wrap], [data-code-line-numbers]')
+  const target = eventTarget.closest<HTMLElement>('[data-code-mode-toggle], [data-code-mode], [data-code-copy], [data-code-settings], [data-code-style], [data-code-background], [data-code-wrap], [data-code-line-numbers]')
   if (!target) { return }
 
   const block = codeBlockForTarget(target)
@@ -96,8 +105,10 @@ function handleCodeControlEvent (event: Event): void {
       setTimeout(() => target.setAttribute('title', '复制代码'), 1200)
     }
     void copy()
-  } else if (target.matches('[data-code-style]')) {
-    applyCodeTheme(block, (target as HTMLSelectElement).value)
+  } else if (target.matches('[data-code-style], [data-code-background]')) {
+    const style = block.querySelector<HTMLSelectElement>('[data-code-style]')?.value ?? 'github'
+    const background = block.querySelector<HTMLSelectElement>('[data-code-background]')?.value ?? 'light'
+    applyCodeTheme(block, style, background)
   } else if (target.matches('[data-code-wrap]')) {
     applyCodeWrap(block, (target as HTMLInputElement).checked)
   } else if (target.matches('[data-code-line-numbers]')) {
