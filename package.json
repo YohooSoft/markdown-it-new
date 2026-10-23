@@ -15,16 +15,6 @@
   },
   "homepage": "https://github.com/YohooSoft/markdown-it-new#readme",
   "license": "MIT",
-  "funding": [
-    {
-      "type": "github",
-      "url": "https://github.com/sponsors/puzrin"
-    },
-    {
-      "type": "github",
-      "url": "https://github.com/sponsors/markdown-it"
-    }
-  ],
   "main": "./dist/markdown-it.cjs.js",
   "module": "./dist/markdown-it.mjs",
   "types": "./dist/markdown-it.d.cts",
