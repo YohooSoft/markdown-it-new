@@ -9,6 +9,9 @@ const options: Required<MarkdownItOptions> = {
   // Enable restricted HTTPS HTML images
   imageHtml: true,
 
+  // Render GLB/GLTF Markdown images as interactive 3D models
+  model3d: true,
+
   // Enable restricted HTTPS iframe embeds
   iframe: true,
 

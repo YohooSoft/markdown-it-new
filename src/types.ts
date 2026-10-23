@@ -62,6 +62,13 @@ export interface MarkdownItOptions {
   imageHtml?: boolean
 
   /**
+   * Render Markdown images ending in `.glb` or `.gltf` as `<model-viewer>`.
+   *
+   * @defaultValue `true` (`false` for the `'zero'` preset)
+   */
+  model3d?: boolean
+
+  /**
    * Enable restricted iframe embeds without enabling arbitrary HTML.
    * Only absolute HTTPS sources and a small set of non-script attributes are
    * emitted.

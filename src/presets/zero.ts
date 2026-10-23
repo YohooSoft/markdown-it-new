@@ -10,6 +10,9 @@ const options: Required<MarkdownItOptions> = {
   // Keep image HTML disabled in the zero preset
   imageHtml: false,
 
+  // Keep 3D model rendering disabled in the zero preset
+  model3d: false,
+
   // Enable restricted HTTPS iframe embeds
   iframe: false,
 

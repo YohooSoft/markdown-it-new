@@ -13,6 +13,19 @@ export type RendererRule = (
 
 const default_rules: Record<string, RendererRule> = {}
 
+type ModelFormat = 'glb' | 'gltf'
+
+function modelFormat (source: string): ModelFormat | null {
+  try {
+    const pathname = new URL(source, 'https://markdown.local/').pathname.toLowerCase()
+    if (pathname.endsWith('.glb')) { return 'glb' }
+    if (pathname.endsWith('.gltf')) { return 'gltf' }
+  } catch {
+    // Invalid sources fall back to ordinary image rendering.
+  }
+  return null
+}
+
 default_rules.code_inline = function (
   tokens: Token[],
   idx: number,
@@ -181,6 +194,20 @@ default_rules.image = function (
 
   token.attrs![token.attrIndex('alt')][1] =
     slf.renderInlineAsText(token.children!, options, env)
+
+  const source = token.attrGet('src')
+  if (options.model3d && typeof source === 'string') {
+    const format = modelFormat(source)
+    if (format) {
+      const alt = token.attrGet('alt')
+      const title = token.attrGet('title')
+      return '<model-viewer class="markdown-model-viewer" data-model-format="' + format +
+        '" src="' + escapeHtml(source) + '" alt="' + escapeHtml(typeof alt === 'string' ? alt : '') + '"' +
+        (typeof title === 'string' ? ' title="' + escapeHtml(title) + '"' : '') +
+        ' camera-controls auto-rotate ar shadow-intensity="1" loading="lazy"' +
+        ' style="display:block;width:100%;height:min(70vh,520px);min-height:320px;margin:12px 0;border:1px solid rgba(148,163,184,.35);border-radius:12px;background:linear-gradient(145deg,#f8fafc,#e2e8f0);overflow:hidden"></model-viewer>'
+    }
+  }
 
   return slf.renderToken(tokens, idx, options)
 }

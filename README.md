@@ -62,6 +62,17 @@ is disabled. Safe `img` tags keep their image source and display attributes;
 event handlers and non-HTTPS sources remain escaped. Set `imageHtml: false` to
 disable this support.
 
+Markdown image syntax also recognizes GLB and GLTF models by default:
+
+```md
+![Astronaut](https://example.com/models/astronaut.glb)
+```
+
+Those sources render as responsive `<model-viewer>` elements with camera
+controls, auto-rotation, and AR support. The consuming page must load Google's
+`<model-viewer>` Web Component. Set `model3d: false` to keep GLB/GLTF links as
+ordinary images.
+
 #### LaTeX math
 
 LaTeX math is enabled by default and is emitted with MathJax-compatible
