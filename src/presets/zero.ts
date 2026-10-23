@@ -7,6 +7,9 @@ const options: Required<MarkdownItOptions> = {
   // Enable HTML tags in source
   html: false,
 
+  // Keep image HTML disabled in the zero preset
+  imageHtml: false,
+
   // Enable restricted HTTPS iframe embeds
   iframe: false,
 
@@ -21,6 +24,9 @@ const options: Required<MarkdownItOptions> = {
 
   // Keep code controls disabled in the zero preset
   codeControls: false,
+
+  // Keep LaTeX math disabled in the zero preset
+  math: false,
 
   // Use '/' to close single tags (<br />)
   xhtmlOut: false,

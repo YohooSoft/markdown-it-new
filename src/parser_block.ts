@@ -15,6 +15,7 @@ import r_html_block from './rules_block/html_block.ts'
 import r_heading from './rules_block/heading.ts'
 import r_lheading from './rules_block/lheading.ts'
 import r_paragraph from './rules_block/paragraph.ts'
+import r_math from './rules_block/math.ts'
 
 const _rules: Array<[
   name: string,
@@ -26,6 +27,7 @@ const _rules: Array<[
   ['table', r_table, ['paragraph', 'reference']],
   ['code', r_code],
   ['fence', r_fence, ['paragraph', 'reference', 'blockquote', 'list']],
+  ['math', r_math, ['paragraph', 'reference', 'blockquote', 'list']],
   ['blockquote', r_blockquote, ['paragraph', 'reference', 'blockquote', 'list']],
   ['hr', r_hr, ['paragraph', 'reference', 'blockquote', 'list']],
   ['list', r_list, ['paragraph', 'reference', 'blockquote']],

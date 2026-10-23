@@ -63,10 +63,57 @@ function resetCodeSettings (block: HTMLElement): void {
   applyCodeLineNumbers(block, false)
 }
 
+function ensureCodeCursorStyle (doc: Document): void {
+  if (doc.head.querySelector('[data-code-cursor-style]')) { return }
+  const style = doc.createElement('style')
+  style.dataset.codeCursorStyle = ''
+  style.textContent = '@keyframes markdown-it-code-cursor-blink{0%,45%{opacity:1}46%,100%{opacity:0}}'
+  doc.head.append(style)
+}
+
+async function streamCode (block: HTMLElement, button: HTMLElement): Promise<void> {
+  if (block.dataset.codeStreamPlayed === 'true' || block.dataset.codeStreaming === 'true') { return }
+  const code = block.querySelector<HTMLElement>('[data-code-code]')
+  if (!code) { return }
+
+  const lines = Array.from(code.querySelectorAll<HTMLElement>('[data-code-line-content]'))
+  const original = code.innerHTML
+  const cursor = code.ownerDocument.createElement('span')
+  cursor.setAttribute('aria-hidden', 'true')
+  cursor.style.cssText = 'display:inline-block;width:.58em;height:1.05em;margin-left:2px;vertical-align:-.15em;background:currentColor;opacity:.8;animation:markdown-it-code-cursor-blink 1s steps(1,end) infinite;'
+  ensureCodeCursorStyle(code.ownerDocument)
+  block.dataset.codeStreaming = 'true'
+  button.setAttribute('disabled', '')
+  button.textContent = '播放中…'
+
+  try {
+    for (const line of lines) {
+      const content = line.textContent ?? ''
+      line.textContent = ''
+      for (let i = 0; i < content.length; i++) {
+        line.textContent = content.slice(0, i + 1)
+        line.append(cursor)
+        await new Promise<void>(resolve => setTimeout(resolve, 14))
+      }
+      if (content.length === 0) { line.append(cursor) }
+      await new Promise<void>(resolve => setTimeout(resolve, 45))
+      cursor.remove()
+    }
+    cursor.remove()
+    code.innerHTML = original
+    block.dataset.codeStreamPlayed = 'true'
+    button.textContent = '已播放'
+  } finally {
+    cursor.remove()
+    delete block.dataset.codeStreaming
+    button.removeAttribute('disabled')
+  }
+}
+
 function handleCodeControlEvent (event: Event): void {
   const eventTarget = event.target
   if (!(eventTarget instanceof Element)) { return }
-  const target = eventTarget.closest<HTMLElement>('[data-code-mode-toggle], [data-code-mode], [data-code-copy], [data-code-settings], [data-code-style], [data-code-background], [data-code-wrap], [data-code-line-numbers]')
+  const target = eventTarget.closest<HTMLElement>('[data-code-mode-toggle], [data-code-mode], [data-code-copy], [data-code-settings], [data-code-style], [data-code-background], [data-code-wrap], [data-code-line-numbers], [data-code-stream]')
   if (!target) { return }
 
   const block = codeBlockForTarget(target)
@@ -105,6 +152,8 @@ function handleCodeControlEvent (event: Event): void {
       setTimeout(() => target.setAttribute('title', '复制代码'), 1200)
     }
     void copy()
+  } else if (target.matches('[data-code-stream]')) {
+    void streamCode(block, target)
   } else if (target.matches('[data-code-style], [data-code-background]')) {
     const style = block.querySelector<HTMLSelectElement>('[data-code-style]')?.value ?? 'github'
     const background = block.querySelector<HTMLSelectElement>('[data-code-background]')?.value ?? 'light'

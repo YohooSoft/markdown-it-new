@@ -24,6 +24,12 @@ default_rules.code_inline = function (
 
   return `<code${slf.renderAttrs(token)}>${escapeHtml(token.content)}</code>`
 }
+default_rules.math_inline = function (tokens: Token[], idx: number): string {
+  return '<span class="math-inline">\\(' + escapeHtml(tokens[idx].content) + '\\)</span>'
+}
+default_rules.math_block = function (tokens: Token[], idx: number): string {
+  return '<div class="math-block">\\[' + escapeHtml(tokens[idx].content) + '\\]</div>\n'
+}
 
 default_rules.code_block = function (
   tokens: Token[],
@@ -95,7 +101,8 @@ function renderCodeBlock (token: Token, highlighted: string, language: string): 
     '<label style="display:flex;align-items:center;justify-content:space-between;gap:14px">代码风格<select data-code-style style="min-width:150px;padding:5px 8px;border:1px solid #cbd5e1;border-radius:7px;background:#fff;color:#334155"><option value="github">GitHub</option><option value="github-dark">GitHub Dark</option><option value="monokai">Monokai</option><option value="dracula">Dracula</option><option value="solarized-light">Solarized Light</option></select></label>' +
     '<label style="display:flex;align-items:center;justify-content:space-between;gap:14px">背景颜色<select data-code-background style="min-width:110px;padding:5px 8px;border:1px solid #cbd5e1;border-radius:7px;background:#fff;color:#334155"><option value="light">浅色</option><option value="dark">深色</option></select></label>' +
     '<label style="display:flex;align-items:center;gap:7px"><input type="checkbox" data-code-wrap style="accent-color:#2563eb">自动换行</label>' +
-    '<label style="display:flex;align-items:center;gap:7px"><input type="checkbox" data-code-line-numbers style="accent-color:#2563eb">行序号</label></div>' +
+    '<label style="display:flex;align-items:center;gap:7px"><input type="checkbox" data-code-line-numbers style="accent-color:#2563eb">行序号</label>' +
+    '<button type="button" data-code-stream style="padding:7px 10px;border:1px solid #cbd5e1;border-radius:7px;background:#f8fafc;color:#334155;font:500 13px/1.3 system-ui,sans-serif;cursor:pointer">流式动画</button></div>' +
     '<pre data-code-pre style="margin:0;padding:16px;overflow:auto;background:#fff;color:#1f2937"><code data-code-code' + codeClass + ' style="display:block;white-space:pre;font:500 14px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace">' + codeHtml + '</code></pre>' +
     '</div>\n'
 }
@@ -202,6 +209,12 @@ default_rules.html_block = function (tokens: Token[], idx: number): string {
 }
 default_rules.html_inline = function (tokens: Token[], idx: number): string {
   return tokens[idx].content
+}
+default_rules.image_html_inline = function (tokens: Token[], idx: number): string {
+  return tokens[idx].content
+}
+default_rules.image_html_block = function (tokens: Token[], idx: number): string {
+  return `${tokens[idx].content}\n`
 }
 default_rules.iframe_block = function (tokens: Token[], idx: number): string {
   return `${tokens[idx].content}\n`

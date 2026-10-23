@@ -4,6 +4,7 @@ import { escapeHtml } from '../common/utils.ts'
 import block_names from '../common/html_blocks.ts'
 import { HTML_OPEN_CLOSE_TAG_RE } from '../common/html_re.ts'
 import matchIframe from '../common/iframe.ts'
+import matchImage from '../common/image.ts'
 import type StateBlock from './state_block.ts'
 
 // An array of opening and corresponding closing sequences for html tags,
@@ -44,6 +45,18 @@ export default function html_block (state: StateBlock, startLine: number, endLin
       const token = state.push('iframe_block', '', 0)
       token.map = [startLine, state.line]
       token.content = iframe.html ?? escapeHtml(iframe.source)
+      return true
+    }
+  }
+
+  if (state.md.options.imageHtml) {
+    const image = matchImage(lineText)
+    if (image && lineText.slice(image.length).trim() === '') {
+      if (silent) { return true }
+      state.line = startLine + 1
+      const token = state.push('image_html_block', '', 0)
+      token.map = [startLine, state.line]
+      token.content = image.html ?? escapeHtml(image.source)
       return true
     }
   }

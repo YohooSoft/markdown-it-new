@@ -6,6 +6,9 @@ const options: Required<MarkdownItOptions> = {
   // Enable HTML tags in source
   html: false,
 
+  // Enable restricted HTTPS HTML images
+  imageHtml: true,
+
   // Enable restricted HTTPS iframe embeds
   iframe: true,
 
@@ -20,6 +23,9 @@ const options: Required<MarkdownItOptions> = {
 
   // Add toolbar and settings controls above fenced code blocks
   codeControls: true,
+
+  // Parse LaTeX math into MathJax-compatible delimiters
+  math: true,
 
   // Use '/' to close single tags (<br />)
   xhtmlOut: false,

@@ -57,6 +57,27 @@ const result = md.render('<iframe src="https://example.com/embed/1"></iframe>')
 Set `iframe: false` to keep iframe markup escaped as text. The strict
 `commonmark` and `zero` presets keep iframe support disabled.
 
+Restricted HTTPS HTML images are enabled by default, even while arbitrary HTML
+is disabled. Safe `img` tags keep their image source and display attributes;
+event handlers and non-HTTPS sources remain escaped. Set `imageHtml: false` to
+disable this support.
+
+#### LaTeX math
+
+LaTeX math is enabled by default and is emitted with MathJax-compatible
+delimiters:
+
+```md
+Inline formula: $E=mc^2$
+
+$$
+\\int_0^1 x^2\\,dx = \\frac{1}{3}
+$$
+```
+
+The page rendering the result must load MathJax to typeset the formulas. Set
+`math: false` to keep dollar-delimited expressions as ordinary text.
+
 #### Ordered task lists
 
 GFM-style task markers are enabled by default and keep the ordered-list

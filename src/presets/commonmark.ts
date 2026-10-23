@@ -6,6 +6,9 @@ const options: Required<MarkdownItOptions> = {
   // Enable HTML tags in source
   html: true,
 
+  // HTML is already enabled in strict CommonMark mode
+  imageHtml: true,
+
   // Enable restricted HTTPS iframe embeds
   iframe: false,
 
@@ -20,6 +23,9 @@ const options: Required<MarkdownItOptions> = {
 
   // Keep code controls disabled in strict CommonMark mode
   codeControls: false,
+
+  // Keep LaTeX math disabled in strict CommonMark mode
+  math: false,
 
   // Use '/' to close single tags (<br />)
   xhtmlOut: true,

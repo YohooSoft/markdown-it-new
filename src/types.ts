@@ -55,6 +55,13 @@ export interface MarkdownItOptions {
   html?: boolean
 
   /**
+   * Enable restricted HTTPS HTML images without enabling arbitrary HTML.
+   *
+   * @defaultValue `true` (`false` for the `'zero'` preset)
+   */
+  imageHtml?: boolean
+
+  /**
    * Enable restricted iframe embeds without enabling arbitrary HTML.
    * Only absolute HTTPS sources and a small set of non-script attributes are
    * emitted.
@@ -91,6 +98,13 @@ export interface MarkdownItOptions {
    * @defaultValue `true` (`false` for `'commonmark'` and `'zero'` presets)
    */
   codeControls?: boolean
+
+  /**
+   * Parse `$...$` inline math and `$$...$$` display math into MathJax-compatible markup.
+   *
+   * @defaultValue `true` (`false` for `'commonmark'` and `'zero'` presets)
+   */
+  math?: boolean
 
   /**
    * Use '/' to close single tags (`<br />`).

@@ -16,6 +16,7 @@ import r_image from './rules_inline/image.ts'
 import r_autolink from './rules_inline/autolink.ts'
 import r_html_inline from './rules_inline/html_inline.ts'
 import r_entity from './rules_inline/entity.ts'
+import r_math from './rules_inline/math.ts'
 
 import r_balance_pairs from './rules_inline/balance_pairs.ts'
 import r_fragments_join from './rules_inline/fragments_join.ts'
@@ -38,6 +39,7 @@ const _rules: Array<[
   ['autolink', r_autolink],
   ['html_inline', r_html_inline],
   ['entity', r_entity]
+  , ['math', r_math]
 ]
 
 // `rule2` ruleset was created specifically for emphasis/strikethrough

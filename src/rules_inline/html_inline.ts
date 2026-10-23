@@ -2,6 +2,7 @@
 
 import { escapeHtml } from '../common/utils.ts'
 import matchIframe from '../common/iframe.ts'
+import matchImage from '../common/image.ts'
 import { HTML_TAG_RE } from '../common/html_re.ts'
 import type StateInline from './state_inline.ts'
 
@@ -35,6 +36,18 @@ export default function html_inline (state: StateInline, silent: boolean): boole
         token.content = iframe.html ?? escapeHtml(iframe.source)
       }
       state.pos += iframe.length
+      return true
+    }
+  }
+
+  if (state.md.options.imageHtml) {
+    const image = matchImage(state.src.slice(pos))
+    if (image) {
+      if (!silent) {
+        const token = state.push('image_html_inline', '', 0)
+        token.content = image.html ?? escapeHtml(image.source)
+      }
+      state.pos += image.length
       return true
     }
   }
