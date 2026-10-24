@@ -14,6 +14,10 @@ function closeCodeMenus (block: HTMLElement, except?: HTMLElement): void {
   block.querySelectorAll<HTMLElement>('[data-code-mode-menu], [data-code-settings-menu]').forEach(menu => {
     if (menu !== except) { menu.hidden = true }
   })
+  const mode = block.querySelector('[data-code-mode-toggle]')
+  const settings = block.querySelector('[data-code-settings]')
+  mode?.setAttribute('aria-expanded', String(except?.matches('[data-code-mode-menu]') ?? false))
+  settings?.setAttribute('aria-expanded', String(except?.matches('[data-code-settings-menu]') ?? false))
 }
 
 function applyCodeTheme (block: HTMLElement, theme: string, background: string): void {
@@ -144,7 +148,7 @@ function handleCodeControlEvent (event: Event): void {
       option.style.background = selected ? '#f8fafc' : 'transparent'
     })
     const menu = block.querySelector<HTMLElement>('[data-code-mode-menu]')
-    if (menu) { menu.hidden = true }
+    if (menu) { closeCodeMenus(block) }
   } else if (target.matches('[data-code-copy]')) {
     const copy = async (): Promise<void> => {
       await navigator.clipboard?.writeText(codeText(block))

@@ -67,7 +67,7 @@ function populateFilterPopover (button: HTMLElement): void {
     checkbox.dataset.tableFilterOption = ''
     checkbox.dataset.tableValue = value
     checkbox.dataset.tableValueCount = String(count)
-    checkbox.style.cssText = 'width:17px;height:17px;margin:0;accent-color:#39b58d;cursor:pointer;'
+    checkbox.style.cssText = 'width:17px;height:17px;margin:0;accent-color:#007aff;cursor:pointer;'
 
     const valueText = doc.createElement('span')
     valueText.textContent = value || '（空白）'
@@ -147,8 +147,8 @@ function updateTable (menu: HTMLElement): void {
     const popover = button.closest<HTMLElement>('[data-table-column-controls]')?.querySelector<HTMLElement>('[data-table-filter-popover]')
     const active = Boolean(popover && filterPopovers(table).includes(popover) &&
       Array.from(popover.querySelectorAll<HTMLInputElement>('[data-table-filter-option]')).some(option => !option.checked))
-    button.style.color = active ? '#2563eb' : '#64748b'
-    button.style.background = active ? '#dbeafe' : 'rgba(255,255,255,.72)'
+    button.style.color = active ? '#0066d6' : '#64748b'
+    button.style.background = active ? '#e8f2ff' : 'rgba(255,255,255,.72)'
   })
 
   if (summary) {
@@ -197,8 +197,8 @@ function setTableMode (menu: HTMLElement, mode: TableMode): void {
   menu.querySelectorAll<HTMLButtonElement>('[data-table-mode-button]').forEach(button => {
     const active = button.dataset.tableModeButton === mode
     button.setAttribute('aria-pressed', String(active))
-    button.style.background = active ? '#e2e8f0' : 'rgba(255,255,255,.72)'
-    button.style.color = active ? '#0f172a' : '#475569'
+    button.style.background = active ? '#e8f2ff' : 'rgba(255,255,255,.72)'
+    button.style.color = active ? '#0066d6' : '#475569'
   }
   )
 }
@@ -210,8 +210,8 @@ function updateSortButton (button: HTMLElement): void {
   button.title = direction === 'asc'
     ? '升序（点击切换为降序）'
     : direction === 'desc' ? '降序（点击取消排序）' : '排序（点击切换为升序）'
-  button.style.color = active ? '#2563eb' : '#64748b'
-  button.style.background = active ? '#dbeafe' : 'rgba(255,255,255,.72)'
+  button.style.color = active ? '#0066d6' : '#64748b'
+  button.style.background = active ? '#e8f2ff' : 'rgba(255,255,255,.72)'
 }
 
 function toggleFilterPopover (button: HTMLElement): void {

@@ -1,4 +1,5 @@
 import { unescapeAll, escapeHtml } from './common/utils.ts'
+import { controlButtonStyle, controlSelectStyle, controlToolbarStyle, controlPopoverStyle } from './control_styles.ts'
 import type Token from './token.ts'
 import type { Env, MarkdownItOptions } from './types.ts'
 
@@ -93,30 +94,35 @@ function renderCodeBlock (token: Token, highlighted: string, language: string): 
   )).join('\n')
   const codeIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 9-3 3 3 3M16 9l3 3-3 3M14 5l-4 14"/></svg>'
   const copyIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg>'
-  const buttonStyle = 'display:inline-flex;align-items:center;gap:5px;padding:7px 10px;border:1px solid rgba(148,163,184,.35);border-radius:8px;background:rgba(255,255,255,.78);color:#334155;font:500 13px/1.3 system-ui,sans-serif;cursor:pointer;'
+  const buttonStyle = controlButtonStyle
 
-  return '<div class="code-block" data-code-block data-code-language="' + escapeHtml(language) + '" style="margin:12px 0;border:1px solid #cbd5e1;border-radius:12px;overflow:visible;background:#fff;box-shadow:0 4px 16px rgba(15,23,42,.06)">' +
-    '<div data-code-toolbar style="display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:54px;padding:10px 14px;background:#f8fafc;border-bottom:1px solid #cbd5e1;font:500 14px/1.3 system-ui,sans-serif">' +
-    '<div style="display:flex;align-items:center;gap:9px;color:#2563eb">' + codeIcon + '<strong>' + label + '</strong></div>' +
-    '<div style="display:flex;align-items:center;gap:7px;min-width:0">' +
-    '<button type="button" data-code-mode-toggle style="' + buttonStyle + '">Embed <span aria-hidden="true">⌄</span></button>' +
-    '<code data-code-preview title="代码预览" style="display:block;max-width:260px;overflow:hidden;color:#334155;text-overflow:ellipsis;white-space:nowrap">' + firstLine + '</code>' +
+  return '<div class="code-block" data-code-block data-code-language="' + escapeHtml(language) + '" style="margin:20px 0;border:1px solid #dedee3;border-radius:14px;overflow:visible;background:#fff;box-shadow:0 8px 28px rgba(0,0,0,.06),0 1px 3px rgba(0,0,0,.04)">' +
+    '<div data-code-toolbar style="display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:58px;padding:12px 16px;border-radius:13px 13px 0 0;background:linear-gradient(180deg,#fafafa,#eeeef1);border-bottom:1px solid #dedee3;font:500 13px/1.5 system-ui,sans-serif">' +
+    '<div style="display:flex;align-items:center;gap:12px;color:#515158">' +
+    '<span data-code-window-dots aria-hidden="true" style="display:inline-flex;gap:7px;padding-right:4px">' +
+    '<span style="width:11px;height:11px;border-radius:50%;background:#ff5f57;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)"></span>' +
+    '<span style="width:11px;height:11px;border-radius:50%;background:#febc2e;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)"></span>' +
+    '<span style="width:11px;height:11px;border-radius:50%;background:#28c840;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)"></span></span>' +
+    codeIcon + '<strong style="font-weight:600">' + label + '</strong></div>' +
+    '<div data-code-actions style="display:flex;align-items:center;gap:7px;min-width:0">' +
+    '<button type="button" data-code-mode-toggle aria-expanded="false" aria-label="代码显示模式" style="' + buttonStyle + '">Embed <span aria-hidden="true">⌄</span></button>' +
+    '<code data-code-preview title="代码预览" style="display:block;max-width:180px;min-width:0;overflow:hidden;color:#94a3b8;font:12px/1.5 ui-monospace,Consolas,monospace;text-overflow:ellipsis;white-space:nowrap">' + firstLine + '</code>' +
     '<button type="button" data-code-copy aria-label="复制代码" title="复制代码" style="' + buttonStyle + '">' + copyIcon + '</button>' +
     '<button type="button" data-code-settings aria-expanded="false" style="' + buttonStyle + '">设置</button>' +
     '</div></div>' +
-    '<div data-code-mode-menu hidden style="position:relative;z-index:5;margin:0 10px;padding:12px;border:1px solid #cbd5e1;border-radius:0 0 10px 10px;background:#fff;box-shadow:0 8px 22px rgba(15,23,42,.12);font:500 14px/1.4 system-ui,sans-serif">' +
-    '<strong style="display:block;margin-bottom:10px;color:#1f2937;font-size:16px">Select an option</strong>' +
+    '<div data-code-mode-menu hidden style="' + controlPopoverStyle + '">' +
+    '<strong style="display:block;margin-bottom:10px;color:#1f2937;font-size:16px">显示方式</strong>' +
     '<button type="button" data-code-mode="embed" aria-selected="true" style="display:grid;width:100%;gap:3px;padding:8px;border:0;border-radius:8px;background:#f8fafc;color:#1f2937;text-align:left;cursor:pointer">' +
-    '<span style="font-size:15px">✓ &nbsp;Embed</span><span style="padding-left:24px;color:#64748b">Embed this code in your website.</span></button>' +
+    '<span style="font-size:15px">✓ &nbsp;Embed</span><span style="padding-left:24px;color:#64748b">嵌入式代码视图</span></button>' +
     '<button type="button" data-code-mode="raw" aria-selected="false" style="display:grid;width:100%;gap:3px;padding:8px;border:0;border-radius:8px;background:transparent;color:#1f2937;text-align:left;cursor:pointer">' +
-    '<span style="font-size:15px">&nbsp;&nbsp;&nbsp;Raw</span><span style="padding-left:24px;color:#64748b">Show the raw code content.</span></button></div>' +
-    '<div data-code-settings-menu hidden style="position:relative;z-index:4;display:grid;gap:9px;margin:0 10px;padding:12px;border:1px solid #cbd5e1;border-radius:0 0 10px 10px;background:#fff;box-shadow:0 8px 22px rgba(15,23,42,.12);font:500 13px/1.4 system-ui,sans-serif;color:#334155">' +
-    '<label style="display:flex;align-items:center;justify-content:space-between;gap:14px">代码风格<select data-code-style style="min-width:150px;padding:5px 8px;border:1px solid #cbd5e1;border-radius:7px;background:#fff;color:#334155"><option value="github">GitHub</option><option value="github-dark">GitHub Dark</option><option value="monokai">Monokai</option><option value="dracula">Dracula</option><option value="solarized-light">Solarized Light</option></select></label>' +
-    '<label style="display:flex;align-items:center;justify-content:space-between;gap:14px">背景颜色<select data-code-background style="min-width:110px;padding:5px 8px;border:1px solid #cbd5e1;border-radius:7px;background:#fff;color:#334155"><option value="light">浅色</option><option value="dark">深色</option></select></label>' +
-    '<label style="display:flex;align-items:center;gap:7px"><input type="checkbox" data-code-wrap style="accent-color:#2563eb">自动换行</label>' +
-    '<label style="display:flex;align-items:center;gap:7px"><input type="checkbox" data-code-line-numbers style="accent-color:#2563eb">行序号</label>' +
-    '<button type="button" data-code-stream style="padding:7px 10px;border:1px solid #cbd5e1;border-radius:7px;background:#f8fafc;color:#334155;font:500 13px/1.3 system-ui,sans-serif;cursor:pointer">流式动画</button></div>' +
-    '<pre data-code-pre style="margin:0;padding:16px;overflow:auto;background:#fff;color:#1f2937"><code data-code-code' + codeClass + ' style="display:block;white-space:pre;font:500 14px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace">' + codeHtml + '</code></pre>' +
+    '<span style="font-size:15px">&nbsp;&nbsp;&nbsp;Raw</span><span style="padding-left:24px;color:#64748b">原始代码视图</span></button></div>' +
+    '<div data-code-settings-menu hidden style="' + controlPopoverStyle + '">' +
+    '<label style="display:flex;align-items:center;justify-content:space-between;gap:14px">代码风格<select data-code-style style="' + controlSelectStyle + '"><option value="github">GitHub</option><option value="github-dark">GitHub Dark</option><option value="monokai">Monokai</option><option value="dracula">Dracula</option><option value="solarized-light">Solarized Light</option></select></label>' +
+    '<label style="display:flex;align-items:center;justify-content:space-between;gap:14px">背景颜色<select data-code-background style="' + controlSelectStyle + '"><option value="light">浅色</option><option value="dark">深色</option></select></label>' +
+    '<label style="display:flex;align-items:center;gap:7px"><input type="checkbox" data-code-wrap style="accent-color:#007aff">自动换行</label>' +
+    '<label style="display:flex;align-items:center;gap:7px"><input type="checkbox" data-code-line-numbers style="accent-color:#007aff">行序号</label>' +
+    '<button type="button" data-code-stream style="' + controlButtonStyle + '">流式动画</button></div>' +
+    '<pre data-code-pre style="margin:0;padding:22px;overflow:auto;background:#fff;color:#24292f"><code data-code-code' + codeClass + ' style="display:block;white-space:pre;font:400 13px/1.8 ui-monospace,SFMono-Regular,Consolas,monospace">' + codeHtml + '</code></pre>' +
     '</div>\n'
 }
 
@@ -261,18 +267,13 @@ default_rules.task_checkbox = function (
 default_rules.task_list_menu = function (tokens: Token[], idx: number): string {
   const total = Number(tokens[idx].meta?.total ?? 0)
   const pending = Number(tokens[idx].meta?.pending ?? 0)
-  const selectStyle = 'min-width:112px;max-width:100%;padding:6px 28px 6px 9px;' +
-    'border:1px solid rgba(148,163,184,.38);border-radius:8px;background:#fff;' +
-    'color:#334155;font:inherit;cursor:pointer;box-shadow:0 1px 2px rgba(15,23,42,.04);'
+  const selectStyle = controlSelectStyle
 
   return '<div class="task-list-menu" data-task-list-menu role="toolbar" aria-label="待办事项菜单" ' +
     'style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;' +
-    'gap:10px 16px;margin:10px 0 8px;padding:10px 12px;border:1px solid rgba(148,163,184,.28);' +
-    'border-radius:12px;background:linear-gradient(135deg,rgba(248,250,252,.94),rgba(241,245,249,.78));' +
-    'box-shadow:0 6px 20px rgba(15,23,42,.06);color:#334155;' +
-    'font:500 14px/1.4 system-ui,-apple-system,&quot;Segoe UI&quot;,sans-serif">' +
+    controlToolbarStyle + '">' +
     '<div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px">' +
-    '<strong style="color:#0f172a;font-size:14px;font-weight:700">待办事项</strong>' +
+    '<strong style="color:#334155;font-size:13px;font-weight:650">待办事项</strong>' +
     `<span data-task-list-summary style="color:#64748b;font-size:12px">共 ${total} 项 · ${pending} 项未完成</span>` +
     '</div>' +
     '<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px">' +
@@ -296,19 +297,13 @@ default_rules.table_controls_menu = function (tokens: Token[], idx: number): str
   const meta = tokens[idx].meta ?? {}
   const headers = Array.isArray(meta.headers) ? meta.headers.map(String) : []
   const rowCount = Number(meta.rowCount ?? 0)
-  const buttonStyle = 'padding:6px 10px;border:1px solid rgba(148,163,184,.38);' +
-    'border-radius:8px;background:rgba(255,255,255,.72);color:#475569;' +
-    'font:inherit;cursor:pointer;box-shadow:0 1px 2px rgba(15,23,42,.04);'
+  const buttonStyle = controlButtonStyle
 
   return '<div class="table-controls-menu" data-table-controls-menu role="toolbar" aria-label="表格筛选和排序" ' +
-    'style="display:grid;gap:10px;margin:10px 0 8px;padding:12px;' +
-    'border:1px solid rgba(148,163,184,.28);border-radius:12px;' +
-    'background:linear-gradient(135deg,rgba(248,250,252,.94),rgba(241,245,249,.78));' +
-    'box-shadow:0 6px 20px rgba(15,23,42,.06);color:#334155;' +
-    'font:500 14px/1.4 system-ui,-apple-system,&quot;Segoe UI&quot;,sans-serif">' +
+    'style="display:grid;' + controlToolbarStyle + '">' +
     '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">' +
     '<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">' +
-    '<strong style="color:#0f172a;font-size:14px;font-weight:700">表格筛选与排序</strong>' +
+    '<strong style="color:#334155;font-size:13px;font-weight:650">表格筛选与排序</strong>' +
     `<span data-table-summary style="color:#64748b;font-size:12px">共 ${rowCount} 行 · ${headers.length} 列</span>` +
     '</div>' +
     '<div style="display:flex;align-items:center;gap:8px">' +
@@ -322,19 +317,19 @@ default_rules.table_column_controls = function (tokens: Token[], idx: number): s
   const meta = tokens[idx].meta ?? {}
   const column = Number(meta.column ?? 0)
   const header = escapeHtml(String(meta.header ?? '').trim() || `第 ${column + 1} 列`)
-  const iconButtonStyle = 'display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;' +
+  const iconButtonStyle = 'display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;' +
     'padding:0;border:1px solid rgba(148,163,184,.34);border-radius:7px;' +
     'background:rgba(255,255,255,.72);color:#64748b;cursor:pointer;vertical-align:middle;'
   const sortIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4v16M5 7l3-3 3 3M16 20V4M13 17l3 3 3-3"/></svg>'
   const filterIcon = '<svg aria-hidden="true" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16l-6.5 7.2V18l-3 1v-6.8L4 5z"/></svg>'
   const actionStyle = 'border:0;background:transparent;padding:2px 0;color:#334155;' +
     'font:500 13px/1.4 system-ui,sans-serif;cursor:pointer;white-space:nowrap;'
-  const filterCheckboxStyle = 'width:17px;height:17px;margin:0;accent-color:#39b58d;cursor:pointer;'
+  const filterCheckboxStyle = 'width:17px;height:17px;margin:0;accent-color:#007aff;cursor:pointer;'
 
   return '<span class="table-column-controls" data-table-column-controls style="position:relative;display:inline-flex;align-items:center;gap:4px;margin-left:7px;vertical-align:middle">' +
     `<button type="button" data-table-sort-button data-table-column="${column}" data-table-sort-direction="none" aria-label="排序 ${header}" title="排序 ${header}" hidden style="${iconButtonStyle}">${sortIcon}</button>` +
     `<button type="button" data-table-filter-button data-table-column="${column}" aria-label="筛选 ${header}" title="筛选 ${header}" hidden style="${iconButtonStyle}">${filterIcon}</button>` +
-    `<span data-table-filter-popover hidden style="position:absolute;z-index:20;top:calc(100% + 5px);left:0;min-width:240px;max-width:320px;padding:10px;border:1px solid rgba(148,163,184,.32);border-radius:10px;background:rgba(255,255,255,.97);box-shadow:0 8px 24px rgba(15,23,42,.14);color:#334155;text-align:left">` +
+    `<span data-table-filter-popover hidden style="position:absolute;z-index:20;top:calc(100% + 5px);left:0;box-sizing:border-box;min-width:260px;max-width:340px;padding:14px;border:1px solid #dedee3;border-radius:12px;background:#fff;box-shadow:0 12px 36px rgba(30,41,59,.12);color:#334155;text-align:left">` +
     '<div style="display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1px solid rgba(148,163,184,.22);white-space:nowrap">' +
     `<label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" data-table-select-all checked style="${filterCheckboxStyle}"><span>全选</span><span data-table-filter-count style="color:#64748b">（0）</span></label>` +
     `<button type="button" data-table-filter-invert style="${actionStyle}">反选</button>` +
