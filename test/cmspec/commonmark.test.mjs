@@ -39,7 +39,7 @@ function generate (path, md) {
 }
 
 describe('CommonMark', function () {
-  const md = markdownit('commonmark')
+  const md = markdownit('commonmark', { imageHtml: false, model3d: false })
 
   generate(new URL('../fixtures/commonmark/spec.txt', import.meta.url), md)
 })

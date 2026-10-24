@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [15.10.0] - 2026-10-24
+
+### Added
+- Open document links in movable preview/edit modals, with native DOCX paragraph
+  editing, existing XLSX cell/PPTX text editing, PDF annotations, and UTF-8 text
+  editing, local-copy downloads, link copying, and new-tab actions.
+  Prompt before discarding unexported changes. Add the `documentLinks` option.
+- Implement an owned OOXML/DOM DOCX engine with selected-text formatting,
+  paragraph splitting, undo/redo, block pagination, and package-preserving
+  exports without external DOCX editor dependencies. Complex
+  paragraphs remain read-only; advanced Word layout is staged separately.
+- Allow enlarged previews to be moved by their title bars and resized from
+  any edge or corner, with keyboard adjustment and geometry restoration.
+- Add a shared enlarged preview modal for tables, images, code, task lists,
+  block math, model cards, and safe iframe embeds, with zoom, a window-filling
+  mode, and keyboard/backdrop dismissal. Add the `expandPreview` option.
+- Recognize neural-network model files through Markdown image syntax and offer
+  click-to-load Netron previews, including ONNX and PyTorch formats.
+- Add `neuralModels` and `neuralModelViewerUrl` options for disabling previews
+  or selecting a self-hosted viewer.
+
+### Fixed
+- Make consumer type checks work with the scoped package name and Windows
+  shells. Explicitly run source tests with Node's TypeScript support, and
+  separate upstream plain-HTML fixture settings from interactive-control tests.
+
 ## [15.9.1] - 2026-10-24
 
 ### Changed

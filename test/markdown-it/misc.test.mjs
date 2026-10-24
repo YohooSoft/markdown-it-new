@@ -3,6 +3,10 @@ import { describe, it } from 'node:test'
 import markdownit from '../../src/index.ts'
 import forInline from 'markdown-it-for-inline'
 
+// These legacy assertions exercise plain renderer output. Dedicated preview
+// tests cover the default interactive controls. Task-list parsing stays enabled.
+const plainControls = { expandPreview: false, documentLinks: false, codeControls: false, tableControls: false, taskListControls: false }
+
 describe('API', function () {
   it('constructor', function () {
     assert.throws(function () {
@@ -15,7 +19,7 @@ describe('API', function () {
   })
 
   it('configure coverage', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     // conditions coverage
     md.configure({})
@@ -31,7 +35,7 @@ describe('API', function () {
 
     function plugin (slf, opts) { if (opts === 'bar') { succeeded = true } }
 
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     md.use(plugin, 'foo')
     assert.strictEqual(succeeded, false)
@@ -41,6 +45,7 @@ describe('API', function () {
 
   it('highlight', function () {
     const md = markdownit({
+      ...plainControls,
       highlight: function (str) {
         return `<pre><code>==${str}==</code></pre>`
       }
@@ -51,6 +56,7 @@ describe('API', function () {
 
   it('highlight escape by default', function () {
     const md = markdownit({
+      ...plainControls,
       highlight: function () {
         return ''
       }
@@ -61,6 +67,7 @@ describe('API', function () {
 
   it('highlight arguments', function () {
     const md = markdownit({
+      ...plainControls,
       highlight: function (str, lang, attrs) {
         assert.strictEqual(lang, 'a')
         assert.strictEqual(attrs, 'b  c  d')
@@ -72,7 +79,7 @@ describe('API', function () {
   })
 
   it('force hardbreaks', function () {
-    const md = markdownit({ breaks: true })
+    const md = markdownit({ ...plainControls, breaks: true })
 
     assert.strictEqual(md.render('a\nb'), '<p>a<br>\nb</p>\n')
     md.set({ xhtmlOut: true })
@@ -80,7 +87,7 @@ describe('API', function () {
   })
 
   it('xhtmlOut enabled', function () {
-    const md = markdownit({ xhtmlOut: true })
+    const md = markdownit({ ...plainControls, xhtmlOut: true })
 
     assert.strictEqual(md.render('---'), '<hr />\n')
     assert.strictEqual(md.render('![]()'), '<p><img src="" alt="" /></p>\n')
@@ -88,7 +95,7 @@ describe('API', function () {
   })
 
   it('xhtmlOut disabled', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     assert.strictEqual(md.render('---'), '<hr>\n')
     assert.strictEqual(md.render('![]()'), '<p><img src="" alt=""></p>\n')
@@ -96,7 +103,7 @@ describe('API', function () {
   })
 
   it('bulk enable/disable rules in different chains', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     const was = {
       core: md.core.ruler.getRules('').length,
@@ -128,7 +135,7 @@ describe('API', function () {
   })
 
   it('bulk enable/disable with errors control', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     assert.throws(function () {
       md.enable(['link', 'code', 'invalid'])
@@ -145,7 +152,7 @@ describe('API', function () {
   })
 
   it('bulk enable/disable should understand strings', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     md.disable('emphasis')
     assert(md.renderInline('_foo_'), '_foo_')
@@ -155,7 +162,7 @@ describe('API', function () {
   })
 
   it('input type check', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     assert.throws(
       function () { md.render(null) },
@@ -166,7 +173,7 @@ describe('API', function () {
 
 describe('Plugins', function () {
   it('should not loop infinitely if all rules are disabled', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     md.inline.ruler.enableOnly([])
     md.inline.ruler2.enableOnly([])
@@ -176,7 +183,7 @@ describe('Plugins', function () {
   })
 
   it('should not loop infinitely if inline rule doesn\'t increment pos', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     md.inline.ruler.after('text', 'custom', function (state/*, silent */) {
       if (state.src.charCodeAt(state.pos) !== 0x40/* @ */) return false
@@ -188,7 +195,7 @@ describe('Plugins', function () {
   })
 
   it('should not loop infinitely if block rule doesn\'t increment pos', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     md.block.ruler.before('paragraph', 'custom', function (state, startLine/*, endLine, silent */) {
       const pos = state.bMarks[startLine] + state.tShift[startLine]
@@ -203,7 +210,7 @@ describe('Plugins', function () {
 
 describe('Misc', function () {
   it('Should store reference labels in token metadata', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
     const tokens = md.parse('[text][foo bar]\n\n![alt][FOO   BAR]\n\n[Foo Bar]: /url', {})
     const inlineTokens = tokens.filter(token => token.type === 'inline')
     const expectedMeta = Object.create(null)
@@ -214,7 +221,7 @@ describe('Misc', function () {
   })
 
   it('Should strip reference definition tokens by default', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
     const src = '[foo]: /url\n\ntext'
 
     assert.deepEqual(md.parse(src, {}).filter(t => t.type === 'reference_definition'), [])
@@ -230,7 +237,7 @@ describe('Misc', function () {
   })
 
   it('Should not affect line breaks with reference definition tokens', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
     md.core.ruler.disable('strip_references')
 
     assert.strictEqual(md.render('- [foo]: /url'), '<ul>\n<li></li>\n</ul>\n')
@@ -241,13 +248,13 @@ describe('Misc', function () {
   })
 
   it('Should replace NULL characters', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     assert.strictEqual(md.render('foo\u0000bar'), '<p>foo\uFFFDbar</p>\n')
   })
 
   it('Should correctly parse strings without tailing \\n', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     assert.strictEqual(md.render('123'), '<p>123</p>\n')
     assert.strictEqual(md.render('123\n'), '<p>123</p>\n')
@@ -257,19 +264,19 @@ describe('Misc', function () {
   })
 
   it('Should quickly exit on empty string', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     assert.strictEqual(md.render(''), '')
   })
 
   it('Should parse inlines only', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     assert.strictEqual(md.renderInline('a *b* c'), 'a <em>b</em> c')
   })
 
   it('Renderer should have pluggable inline and block rules', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     md.renderer.rules.em_open = function () { return '<it>' }
     md.renderer.rules.em_close = function () { return '</it>' }
@@ -298,7 +305,7 @@ describe('Misc', function () {
   })
 
   it('Should render link target attr', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
       .use(forInline, 'target', 'link_open', function (tokens, idx) {
         tokens[idx].attrs.push(['target', '_blank'])
       })
@@ -307,7 +314,7 @@ describe('Misc', function () {
   })
 
   it('Should normalize CR to LF', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     assert.strictEqual(
       md.render('# test\r\r - hello\r - world\r'),
@@ -316,7 +323,7 @@ describe('Misc', function () {
   })
 
   it('Should normalize CR+LF to LF', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     assert.strictEqual(
       md.render('# test\r\n\r\n - hello\r\n - world\r\n'),
@@ -325,7 +332,7 @@ describe('Misc', function () {
   })
 
   it('Should join text tokens inside image alt', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     assert.strictEqual(md.render('![a \\* b](/u)'),
       '<p><img src="/u" alt="a * b"></p>\n')
@@ -341,7 +348,7 @@ describe('Misc', function () {
   })
 
   it('Should escape surrogate pairs (coverage)', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     assert.strictEqual(md.render('\\\uD835\uDC9C'), '<p>\\\uD835\uDC9C</p>\n')
     assert.strictEqual(md.render('\\\uD835x'), '<p>\\\uD835x</p>\n')
@@ -351,7 +358,7 @@ describe('Misc', function () {
 
 describe('Linkify', function () {
   it('Should match links without protocol when enabled (and auto-add protocol)', function () {
-    const md = markdownit({ linkify: true })
+    const md = markdownit({ ...plainControls, linkify: true })
 
     md.linkify.set({ fuzzyLink: true })
 
@@ -362,7 +369,7 @@ describe('Linkify', function () {
   })
 
   it('Should normalize IDN in fuzzy links', function () {
-    const md = markdownit({ linkify: true })
+    const md = markdownit({ ...plainControls, linkify: true })
 
     md.linkify.set({ fuzzyLink: true })
 
@@ -373,7 +380,7 @@ describe('Linkify', function () {
   })
 
   it('regression test, invalid link', function () {
-    const md = markdownit({ linkify: true })
+    const md = markdownit({ ...plainControls, linkify: true })
 
     md.linkify.set({ fuzzyLink: true })
 
@@ -388,7 +395,7 @@ describe('Linkify', function () {
 
 describe('Url normalization', function () {
   it('Should be overridable', function () {
-    const md = markdownit({ linkify: true })
+    const md = markdownit({ ...plainControls, linkify: true })
 
     md.normalizeLink = function (url) {
       assert(url.match(/example\.com/), 'wrong url passed')
@@ -410,7 +417,7 @@ describe('Url normalization', function () {
 
 describe('Links validation', function () {
   it('Override validator, disable everything', function () {
-    const md = markdownit({ linkify: true })
+    const md = markdownit({ ...plainControls, linkify: true })
 
     md.validateLink = function () { return false }
 
@@ -425,7 +432,7 @@ describe('Links validation', function () {
 
 describe('maxNesting', function () {
   it('Block parser should not nest above limit', function () {
-    const md = markdownit({ maxNesting: 2 })
+    const md = markdownit({ ...plainControls, maxNesting: 2 })
     assert.strictEqual(
       md.render('>foo\n>>bar\n>>>baz'),
       '<blockquote>\n<p>foo</p>\n<blockquote></blockquote>\n</blockquote>\n'
@@ -433,7 +440,7 @@ describe('maxNesting', function () {
   })
 
   it('Inline parser should not nest above limit', function () {
-    const md = markdownit({ maxNesting: 1 })
+    const md = markdownit({ ...plainControls, maxNesting: 1 })
     assert.strictEqual(
       md.render('[`foo`]()'),
       '<p><a href="">`foo`</a></p>\n'
@@ -441,7 +448,7 @@ describe('maxNesting', function () {
   })
 
   it('Inline nesting coverage', function () {
-    const md = markdownit({ maxNesting: 2 })
+    const md = markdownit({ ...plainControls, maxNesting: 2 })
     assert.strictEqual(
       md.render('[[[[[[[[[[[[[[[[[[foo]()'),
       '<p>[[[[[[[[[[[[[[[[[[foo]()</p>\n'
@@ -451,6 +458,7 @@ describe('maxNesting', function () {
 
 describe('smartquotes', function () {
   const md = markdownit({
+    ...plainControls,
     typographer: true,
 
     // all strings have different length to make sure
@@ -481,7 +489,7 @@ describe('smartquotes', function () {
 })
 
 describe('Ordered list info', function () {
-  const md = markdownit()
+  const md = markdownit({ ...plainControls })
 
   function type_filter (tokens, type) {
     return tokens.filter(function (t) { return t.type === type })
@@ -516,7 +524,7 @@ describe('Ordered list info', function () {
 
 describe('iframe embeds', function () {
   it('renders a restricted HTTPS iframe when enabled', function () {
-    const md = markdownit({ iframe: true })
+    const md = markdownit({ ...plainControls, iframe: true })
 
     assert.strictEqual(
       md.render('<iframe src="https://player.example/embed/1?x=1&amp;y=2" scrolling="no" allowfullscreen="true" onload="alert(1)"></iframe>'),
@@ -525,7 +533,7 @@ describe('iframe embeds', function () {
   })
 
   it('renders an iframe inside a paragraph when enabled', function () {
-    const md = markdownit({ iframe: true })
+    const md = markdownit({ ...plainControls, iframe: true })
 
     assert.strictEqual(
       md.render('Video: <iframe src="https://player.example/embed/1"></iframe>'),
@@ -534,7 +542,7 @@ describe('iframe embeds', function () {
   })
 
   it('enables restricted iframe support in the default preset', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     assert.strictEqual(
       md.render('<iframe src="https://player.example/embed/1"></iframe>'),
@@ -543,7 +551,7 @@ describe('iframe embeds', function () {
   })
 
   it('can disable iframe support', function () {
-    const md = markdownit({ iframe: false })
+    const md = markdownit({ ...plainControls, iframe: false })
 
     assert.strictEqual(
       md.render('<iframe src="https://player.example/embed/1"></iframe>'),
@@ -552,7 +560,7 @@ describe('iframe embeds', function () {
   })
 
   it('escapes iframe sources that are not HTTPS', function () {
-    const md = markdownit({ iframe: true })
+    const md = markdownit({ ...plainControls, iframe: true })
 
     assert.strictEqual(
       md.render('Video: <iframe src="javascript:alert(1)"></iframe>'),
@@ -563,7 +571,7 @@ describe('iframe embeds', function () {
 
 describe('task lists', function () {
   it('renders ordered task items with their numbering', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     assert.strictEqual(
       md.render('1. [ ] first\n2. [x] finished\n3. [X] also finished'),
@@ -576,13 +584,13 @@ describe('task lists', function () {
   })
 
   it('does not treat an ordinary paragraph as a task item', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     assert.strictEqual(md.render('[ ] ordinary text'), '<p>[ ] ordinary text</p>\n')
   })
 
   it('can disable task list parsing', function () {
-    const md = markdownit({ taskLists: false })
+    const md = markdownit({ ...plainControls, taskLists: false })
 
     assert.strictEqual(
       md.render('1. [ ] first\n2. [x] finished'),
@@ -609,7 +617,7 @@ describe('task lists', function () {
 
 describe('Token attributes', function () {
   it('.attrJoin', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     const tokens = md.parse('```')
     const t = tokens[0]
@@ -624,7 +632,7 @@ describe('Token attributes', function () {
   })
 
   it('.attrSet', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     const tokens = md.parse('```')
     const t = tokens[0]
@@ -645,7 +653,7 @@ describe('Token attributes', function () {
   })
 
   it('.attrGet', function () {
-    const md = markdownit()
+    const md = markdownit({ ...plainControls })
 
     const tokens = md.parse('```')
     const t = tokens[0]

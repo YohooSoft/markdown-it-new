@@ -3,6 +3,9 @@ import MarkdownIt from './markdownit.ts'
 import './task_list_controls.ts'
 import './table_controls.ts'
 import './code_controls.ts'
+import './neural_model_controls.ts'
+import './preview_controls.ts'
+import './document_controls.ts'
 
 /**
  * Default package export.

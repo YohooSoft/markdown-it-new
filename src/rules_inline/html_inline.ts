@@ -34,6 +34,7 @@ export default function html_inline (state: StateInline, silent: boolean): boole
       if (!silent) {
         const token = state.push('iframe_inline', '', 0)
         token.content = iframe.html ?? escapeHtml(iframe.source)
+        if (state.linkLevel > 0 && state.md.options.expandPreview) { token.meta = { previewInLink: true } }
       }
       state.pos += iframe.length
       return true
@@ -46,6 +47,7 @@ export default function html_inline (state: StateInline, silent: boolean): boole
       if (!silent) {
         const token = state.push('image_html_inline', '', 0)
         token.content = image.html ?? escapeHtml(image.source)
+        if (state.linkLevel > 0 && state.md.options.expandPreview) { token.meta = { previewInLink: true } }
       }
       state.pos += image.length
       return true

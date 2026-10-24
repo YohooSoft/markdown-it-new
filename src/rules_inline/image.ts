@@ -1,6 +1,7 @@
 // Process ![image](<src> "title")
 
 import { normalizeReference, isSpace } from '../common/utils.ts'
+import { neuralModelFormat } from '../common/neural_model.ts'
 import type Token from '../token.ts'
 import type StateInline from './state_inline.ts'
 
@@ -137,6 +138,12 @@ export default function image (state: StateInline, silent: boolean): boolean {
       const meta: Record<string, unknown> = Object.create(null)
       meta.label = label
       token.meta = meta
+    }
+    // Interactive model cards must not create buttons or nested links inside
+    // a linked image. Preserve ordinary image rendering in that context.
+    if (state.linkLevel > 0 && (state.md.options.expandPreview || (state.md.options.neuralModels && neuralModelFormat(href)))) {
+      token.meta ??= {}
+      token.meta.previewInLink = true
     }
   }
 

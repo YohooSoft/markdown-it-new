@@ -1,5 +1,8 @@
 import { unescapeAll, escapeHtml } from './common/utils.ts'
 import { controlButtonStyle, controlSelectStyle, controlToolbarStyle, controlPopoverStyle } from './control_styles.ts'
+import { neuralModelFormat, neuralViewerUrl } from './common/neural_model.ts'
+import { previewOpen, previewClose, previewRanges } from './preview_renderer.ts'
+import { documentFormat } from './common/document_file.ts'
 import type Token from './token.ts'
 import type { Env, MarkdownItOptions } from './types.ts'
 
@@ -13,6 +16,16 @@ export type RendererRule = (
 ) => string
 
 const default_rules: Record<string, RendererRule> = {}
+
+default_rules.link_open = function (tokens, idx, options, env, slf): string {
+  const token = tokens[idx]
+  const href = token.attrGet('href')
+  const format = options.documentLinks && typeof href === 'string' ? documentFormat(href) : null
+  if (!format) { return slf.renderToken(tokens, idx, options) }
+  const attrs = (token.attrs || []).filter(([name]) => !['data-document-link', 'aria-haspopup', 'aria-expanded'].includes(name))
+  attrs.push(['data-document-link', format], ['aria-haspopup', 'dialog'], ['aria-expanded', 'false'])
+  return '<a' + slf.renderAttrs({ attrs }) + '>'
+}
 
 type ModelFormat = 'glb' | 'gltf'
 
@@ -202,6 +215,31 @@ default_rules.image = function (
     slf.renderInlineAsText(token.children!, options, env)
 
   const source = token.attrGet('src')
+  if (options.neuralModels && !token.meta?.previewInLink && typeof source === 'string') {
+    const format = neuralModelFormat(source)
+    const viewer = neuralViewerUrl(source, options.neuralModelViewerUrl)
+    if (format && viewer) {
+      const name = String(token.attrGet('alt') || format.label + ' 模型')
+      const title = token.attrGet('title')
+      return '<span class="neural-model-viewer" data-neural-model data-neural-model-format="' + format.extension +
+        '" data-neural-model-source="' + escapeHtml(source) +
+        '" data-neural-model-viewer="' + escapeHtml(options.neuralModelViewerUrl) +
+        '" data-neural-model-title="' + escapeHtml(name) + '"' +
+        (title ? ' title="' + escapeHtml(String(title)) + '"' : '') +
+        ' style="display:block;margin:20px 0;border:1px solid #dedee3;border-radius:14px;background:#fff;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.06);font:13px/1.6 system-ui,sans-serif;color:#515158">' +
+        '<span style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:linear-gradient(#fafafa,#eeeef1);border-bottom:1px solid #dedee3">' +
+        '<span style="display:flex;align-items:center;gap:10px;min-width:0">' +
+        '<span style="padding:3px 8px;border:1px solid #d4d4da;border-radius:6px;background:#fff;color:#007aff;font-size:11px;font-weight:600">' + escapeHtml(format.label) + '</span>' +
+        '<strong style="font-weight:600;overflow-wrap:anywhere">' + escapeHtml(name) + '</strong></span>' +
+        '<span style="display:flex;flex-wrap:wrap;gap:8px">' +
+        '<button type="button" data-neural-model-toggle aria-expanded="false" style="' + controlButtonStyle + '">查看模型</button>' +
+        '<a data-neural-model-open href="' + escapeHtml(viewer) + '" target="_blank" rel="noopener noreferrer" style="' + controlButtonStyle + 'text-decoration:none">在 Netron 中打开 ↗</a></span></span>' +
+        '<span data-neural-model-slot hidden></span>' +
+        '<span data-neural-model-status role="status" style="display:block;padding:12px 16px;color:#73737c;font-size:12px">' +
+        '点击预览会在 Netron 中加载模型地址；跨域文件需允许 CORS。仅权重文件可能没有计算图。' +
+        ' <a href="' + escapeHtml(source) + '" target="_blank" rel="noopener noreferrer" style="color:#007aff">模型文件 ↗</a></span></span>'
+    }
+  }
   if (options.model3d && typeof source === 'string') {
     const format = modelFormat(source)
     if (format) {
@@ -477,12 +515,17 @@ class Renderer {
 
     for (let i = 0, len = tokens.length; i < len; i++) {
       const type = tokens[i].type
+      const preview = options.expandPreview && !tokens[i].meta?.previewInLink &&
+        (type === 'image' || (type === 'image_html_inline' && tokens[i].content.startsWith('<img ')) ||
+          (type === 'iframe_inline' && tokens[i].content.startsWith('<iframe ')))
+      if (preview) { result += previewOpen(type === 'iframe_inline' ? '嵌入内容' : type === 'image' ? tokens[i].content || '图片或模型' : '图片', true) }
 
       if (typeof rules[type] !== 'undefined') {
         result += rules[type](tokens, i, options, env, this)
       } else {
         result += this.renderToken(tokens, i, options)
       }
+      if (preview) { result += previewClose(true) }
     }
 
     return result
@@ -529,9 +572,16 @@ class Renderer {
   render (tokens: Token[], options: Required<MarkdownItOptions>, env?: Env): string {
     let result = ''
     const rules = this.rules
+    const ranges = options.expandPreview ? previewRanges(tokens) : null
 
     for (let i = 0, len = tokens.length; i < len; i++) {
       const type = tokens[i].type
+      const title = ranges?.opens.get(i)
+      if (title) { result += previewOpen(title) }
+      const preview = options.expandPreview && (['fence', 'code_block', 'math_block'].includes(type) ||
+        (type === 'iframe_block' && tokens[i].content.startsWith('<iframe ')) ||
+        (type === 'image_html_block' && tokens[i].content.startsWith('<img ')))
+      if (preview) { result += previewOpen(type === 'math_block' ? '公式' : type === 'iframe_block' ? '嵌入内容' : type === 'image_html_block' ? '图片' : '代码') }
 
       if (type === 'inline') {
         result += this.renderInline(tokens[i].children!, options, env)
@@ -540,6 +590,7 @@ class Renderer {
       } else {
         result += this.renderToken(tokens, i, options)
       }
+      if (preview || ranges?.closes.has(i)) { result += previewClose() }
     }
 
     return result

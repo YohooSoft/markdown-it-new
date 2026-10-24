@@ -1,5 +1,5 @@
 // Types are checked as a package consumer would see them, via `exports` map.
-import md = require('markdown-it')
+import md = require('@mryan2005/markdown-it-new')
 
 const parser = new md({ html: true })
 const legacy = md('commonmark')

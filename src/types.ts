@@ -69,6 +69,40 @@ export interface MarkdownItOptions {
   model3d?: boolean
 
   /**
+   * Render neural-network model images (.onnx, .pt, .pth, .torchscript,
+   * .tflite, .pb, .h5, .keras, .safetensors) as click-to-load Netron viewers.
+   * This inspects model structure and tensors; it does not run inference.
+   *
+   * @defaultValue `true` (`false` for `'commonmark'` and `'zero'` presets)
+   */
+  neuralModels?: boolean
+
+  /**
+   * Absolute Netron web viewer URL. Supports HTTPS or HTTP loopback servers.
+   * Model URLs are passed to this viewer only when a reader opens a preview.
+   *
+   * @defaultValue `'https://netron.app/'`
+   */
+  neuralModelViewerUrl?: string
+
+  /**
+   * Add modal enlargement to images, tables, code, task lists, block math,
+   * and model/iframe previews. Requires the browser bundle for interaction.
+   *
+   * @defaultValue `true` (`false` for `'commonmark'` and `'zero'` presets)
+   */
+  expandPreview?: boolean
+
+  /**
+   * Open file links in a document modal with paginated DOCX editing, existing
+   * XLSX cell/PPTX text editing, PDF notes, and UTF-8 text editing. Changes
+   * download as copies; the source is never overwritten.
+   *
+   * @defaultValue `true` (`false` for `'commonmark'` and `'zero'` presets)
+   */
+  documentLinks?: boolean
+
+  /**
    * Enable restricted iframe embeds without enabling arbitrary HTML.
    * Only absolute HTTPS sources and a small set of non-script attributes are
    * emitted.

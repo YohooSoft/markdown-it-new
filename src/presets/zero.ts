@@ -13,6 +13,11 @@ const options: Required<MarkdownItOptions> = {
   // Keep 3D model rendering disabled in the zero preset
   model3d: false,
 
+  neuralModels: false,
+  neuralModelViewerUrl: 'https://netron.app/',
+  expandPreview: false,
+  documentLinks: false,
+
   // Enable restricted HTTPS iframe embeds
   iframe: false,
 
