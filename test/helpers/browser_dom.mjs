@@ -56,6 +56,7 @@ export class NodeStub {
   get textContent () { return (this._text || '') + this.childNodes.map(child => child.textContent).join('') }
   set textContent (value) { this._text = value; for (const child of [...this.childNodes]) { child.remove() } }
   getAttribute (name) { return this.attributes[name] ?? null }
+  hasAttribute (name) { return Object.hasOwn(this.attributes, name) }
 
   setAttribute (key, value) {
     this.attributes[key] = value

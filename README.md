@@ -224,6 +224,13 @@ $$
 The page rendering the result must load MathJax to typeset the formulas. Set
 `math: false` to keep dollar-delimited expressions as ordinary text.
 
+With the browser bundle, select typeset formulas as ordinary text and use
+Ctrl/Cmd+C or the browser's Copy menu. The clipboard receives LaTeX with
+`$...$` or `$$...$$` delimiters; surrounding selected text and multiple formulas
+remain in order. This uses native copy events and works after MathJax typesetting.
+Selecting part of a formula copies the **whole formula**, not a TeX subexpression.
+Copying ordinary text or editing fields retains the browser's normal behavior.
+
 #### Ordered task lists
 
 GFM-style task markers are enabled by default and keep the ordered-list

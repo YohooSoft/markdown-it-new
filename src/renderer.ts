@@ -51,12 +51,16 @@ default_rules.code_inline = function (
 
   return `<code${slf.renderAttrs(token)}>${escapeHtml(token.content)}</code>`
 }
-default_rules.math_inline = function (tokens: Token[], idx: number): string {
-  return '<span class="math-inline">\\(' + escapeHtml(tokens[idx].content) + '\\)</span>'
+function mathMarkup (token: Token, block: boolean): string {
+  const tag = block ? 'div' : 'span'
+  const rendered = '<' + tag + ' class="math-' + (block ? 'block' : 'inline') + '">' +
+    (block ? '\\[' : '\\(') + escapeHtml(token.content) + (block ? '\\]' : '\\)') + '</' + tag + '>'
+  const syntax = block ? '$$\n' + token.content + (token.content.endsWith('\n') ? '' : '\n') + '$$' : '$' + token.content + '$'
+  return '<' + tag + ' data-math-container data-math-source="' + escapeHtml(syntax).replace(/\n/g, '&#10;').replace(/\r/g, '&#13;') + '"' +
+    (block ? ' data-math-display' : '') + '>' + rendered + '</' + tag + '>' + (block ? '\n' : '')
 }
-default_rules.math_block = function (tokens: Token[], idx: number): string {
-  return '<div class="math-block">\\[' + escapeHtml(tokens[idx].content) + '\\]</div>\n'
-}
+default_rules.math_inline = (tokens, idx) => mathMarkup(tokens[idx], false)
+default_rules.math_block = (tokens, idx) => mathMarkup(tokens[idx], true)
 
 default_rules.code_block = function (
   tokens: Token[],
