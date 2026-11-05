@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [15.11.0] - 2026-11-05
+
 ### Added
 - Render fenced `roadmap` JSON blocks as responsive numbered timeline cards
   with a title, optional badge, periods, descriptions, and footer note. Add the
