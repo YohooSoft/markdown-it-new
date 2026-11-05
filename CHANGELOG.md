@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Render fenced `roadmap` JSON blocks as responsive numbered timeline cards
+  with a title, optional badge, periods, descriptions, and footer note. Add the
+  `roadmaps` option and shared enlarged-preview support. Invalid data stays code.
 - Copy selected typeset formulas as inline/display LaTeX using native copy
   gestures, preserving surrounding selected text and formula order. Partial
   formula selections copy the whole formula.

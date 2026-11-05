@@ -78,6 +78,14 @@ export interface MarkdownItOptions {
   neuralModels?: boolean
 
   /**
+   * Render fenced `roadmap` JSON blocks as numbered timeline cards.
+   * Invalid data remains an ordinary code block. All fields are plain text.
+   *
+   * @defaultValue `true` (`false` for `'commonmark'` and `'zero'` presets)
+   */
+  roadmaps?: boolean
+
+  /**
    * Absolute Netron web viewer URL. Supports HTTPS or HTTP loopback servers.
    * Model URLs are passed to this viewer only when a reader opens a preview.
    *

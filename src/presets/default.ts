@@ -13,6 +13,7 @@ const options: Required<MarkdownItOptions> = {
   model3d: true,
 
   neuralModels: true,
+  roadmaps: true,
   neuralModelViewerUrl: 'https://netron.app/',
   expandPreview: true,
   documentLinks: true,

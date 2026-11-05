@@ -14,6 +14,7 @@ const options: Required<MarkdownItOptions> = {
   model3d: false,
 
   neuralModels: false,
+  roadmaps: false,
   neuralModelViewerUrl: 'https://netron.app/',
   expandPreview: false,
   documentLinks: false,
@@ -79,6 +80,7 @@ export default {
       rules: [
         'normalize',
         'block',
+        'roadmap',
         'strip_references',
         'inline',
         'text_join'

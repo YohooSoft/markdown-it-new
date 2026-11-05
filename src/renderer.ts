@@ -3,6 +3,8 @@ import { controlButtonStyle, controlSelectStyle, controlToolbarStyle, controlPop
 import { neuralModelFormat, neuralViewerUrl } from './common/neural_model.ts'
 import { previewOpen, previewClose, previewRanges } from './preview_renderer.ts'
 import { documentFormat } from './common/document_file.ts'
+import { renderRoadmap } from './roadmap_renderer.ts'
+import type { Roadmap } from './common/roadmap.ts'
 import type Token from './token.ts'
 import type { Env, MarkdownItOptions } from './types.ts'
 
@@ -16,6 +18,8 @@ export type RendererRule = (
 ) => string
 
 const default_rules: Record<string, RendererRule> = {}
+
+default_rules.roadmap = (tokens, idx) => renderRoadmap(tokens[idx].meta!.roadmap as Roadmap)
 
 default_rules.link_open = function (tokens, idx, options, env, slf): string {
   const token = tokens[idx]
@@ -582,10 +586,10 @@ class Renderer {
       const type = tokens[i].type
       const title = ranges?.opens.get(i)
       if (title) { result += previewOpen(title) }
-      const preview = options.expandPreview && (['fence', 'code_block', 'math_block'].includes(type) ||
+      const preview = options.expandPreview && (['fence', 'code_block', 'math_block', 'roadmap'].includes(type) ||
         (type === 'iframe_block' && tokens[i].content.startsWith('<iframe ')) ||
         (type === 'image_html_block' && tokens[i].content.startsWith('<img ')))
-      if (preview) { result += previewOpen(type === 'math_block' ? '公式' : type === 'iframe_block' ? '嵌入内容' : type === 'image_html_block' ? '图片' : '代码') }
+      if (preview) { result += previewOpen(type === 'roadmap' ? '路线图' : type === 'math_block' ? '公式' : type === 'iframe_block' ? '嵌入内容' : type === 'image_html_block' ? '图片' : '代码') }
 
       if (type === 'inline') {
         result += this.renderInline(tokens[i].children!, options, env)

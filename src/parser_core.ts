@@ -3,6 +3,7 @@ import StateCore from './rules_core/state_core.ts'
 
 import r_normalize from './rules_core/normalize.ts'
 import r_block from './rules_core/block.ts'
+import r_roadmap from './rules_core/roadmap.ts'
 import r_strip_references from './rules_core/strip_references.ts'
 import r_inline from './rules_core/inline.ts'
 import r_linkify from './rules_core/linkify.ts'
@@ -18,6 +19,7 @@ const _rules: Array<[
 ]> = [
   ['normalize', r_normalize],
   ['block', r_block],
+  ['roadmap', r_roadmap],
   ['strip_references', r_strip_references],
   ['inline', r_inline],
   ['task_lists', r_task_lists],

@@ -118,6 +118,54 @@ existing `model3d` option continues to control only GLB/GLTF previews.
 Model images wrapped in Markdown links retain ordinary image output to avoid
 nesting buttons and links inside another link.
 
+#### Roadmap cards
+
+Use a `roadmap` fence containing JSON to render a numbered timeline card:
+
+````md
+```roadmap
+{
+  "title": "My Life Roadmap",
+  "items": [
+    {
+      "period": "2023–2027",
+      "title": "Undergraduate Studies",
+      "description": "Build foundations in artificial intelligence and computer science."
+    },
+    {
+      "period": "2027–2030",
+      "title": "Graduate Studies",
+      "description": "Pursue advanced research and academic development."
+    },
+    {
+      "period": "2030–2035",
+      "title": "Career Development",
+      "description": "Establish a career, settle in a preferred city, and develop independent projects."
+    },
+    {
+      "period": "2035+",
+      "title": "Long-Term Vision",
+      "description": "Pursue financial independence, personal freedom, and lifelong ambitions."
+    }
+  ],
+  "note": "仅为展示形式的示例，并非对你的实际未来作出的预测。"
+}
+```
+````
+
+`title` and a nonempty `items` array are required; each item needs a nonempty
+`title`. The card's `badge` and `note`, and each item's `period` and
+`description`, are optional strings. Numbers and connecting lines are generated
+automatically. All fields are escaped plain text, including when `html: true`;
+descriptions and notes preserve newlines. Ordinary ordered lists are unaffected.
+Invalid JSON or invalid fields keep the original fenced-code rendering.
+
+Cards include their own responsive styles and render without browser JavaScript.
+With the browser bundle and `expandPreview` enabled, they also support enlarged
+previews. Set `roadmaps: false` or call `md.disable('roadmap')` to keep these
+fences as code. The `commonmark` and `zero` presets keep this extension off;
+opt in with `roadmaps: true` (also enable `fence` when using `zero`).
+
 #### Enlarged previews
 
 The default preset adds a **放大预览** button to tables, images, code blocks,

@@ -1,6 +1,6 @@
 import MarkdownIt, { type Token } from '@mryan2005/markdown-it-new'
 
-const parser = new MarkdownIt({ html: true })
+const parser = new MarkdownIt({ html: true, roadmaps: true })
 const tokens: Token[] = parser.parse('abc', {})
 
 export { parser, tokens }

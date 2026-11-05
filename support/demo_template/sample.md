@@ -10,6 +10,37 @@ You will like those projects!
 
 ---
 
+## Roadmap card
+
+```roadmap
+{
+  "title": "My Life Roadmap",
+  "items": [
+    {
+      "period": "2023–2027",
+      "title": "Undergraduate Studies",
+      "description": "Build foundations in artificial intelligence and computer science."
+    },
+    {
+      "period": "2027–2030",
+      "title": "Graduate Studies",
+      "description": "Pursue advanced research and academic development."
+    },
+    {
+      "period": "2030–2035",
+      "title": "Career Development",
+      "description": "Establish a career, settle in a preferred city, and develop independent projects."
+    },
+    {
+      "period": "2035+",
+      "title": "Long-Term Vision",
+      "description": "Pursue financial independence, personal freedom, and lifelong ambitions."
+    }
+  ],
+  "note": "仅为展示形式的示例，并非对你的实际未来作出的预测。"
+}
+```
+
 # h1 Heading 8-)
 ## h2 Heading
 ### h3 Heading
