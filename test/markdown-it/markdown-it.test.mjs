@@ -18,6 +18,17 @@ const fixtures = [
 
 describe('markdown-it', function () {
   const md = markdownit({
+    // Upstream fixtures assert plain HTML; preview wrappers have dedicated tests.
+    expandPreview: false,
+    documentLinks: false,
+    codeControls: false,
+    tableControls: false,
+    taskListControls: false,
+    taskLists: false,
+    imageHtml: false,
+    model3d: false,
+    neuralModels: false,
+    math: false,
     html: true,
     langPrefix: '',
     typographer: true,

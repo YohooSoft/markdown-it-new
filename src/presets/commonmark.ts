@@ -12,6 +12,12 @@ const options: Required<MarkdownItOptions> = {
   // Render GLB/GLTF Markdown images as interactive 3D models
   model3d: true,
 
+  neuralModels: false,
+  roadmaps: false,
+  neuralModelViewerUrl: 'https://netron.app/',
+  expandPreview: false,
+  documentLinks: false,
+
   // Enable restricted HTTPS iframe embeds
   iframe: false,
 
@@ -73,6 +79,7 @@ export default {
       rules: [
         'normalize',
         'block',
+        'roadmap',
         'strip_references',
         'inline',
         'task_lists',
